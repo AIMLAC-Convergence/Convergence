@@ -5,4 +5,5 @@ dependencies:
   - numpy
   - pandas
   - matplotlib
+  - holidays
  
