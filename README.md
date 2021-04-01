@@ -1,4 +1,4 @@
-[![pipeline status]]
+[![Run tests](https://github.com/DrewBarratt90/Convergence/actions/workflows/pytest.yaml/badge.svg)](https://github.com/DrewBarratt90/Convergence/actions/workflows/pytest.yaml)
 
 # Convergence
 
@@ -11,6 +11,7 @@ Repository for the convergence project aiming to deliver a state-of-the art auto
 ### Pre-requisites:
 
 You should have the `conda` environment manger installed. This ensures a consistent development environment - regardless of the machine you are using, in turn making issue-spotting simpler.
+Note that each submodule should also include a `requirements.txt` file which includes packages specific to the module which can then be installed with `pip` (will also be needed for containerisation).
 
 ### Step 1: Make a directory
 ```bash
