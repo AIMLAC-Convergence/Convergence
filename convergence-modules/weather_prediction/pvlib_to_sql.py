@@ -30,10 +30,16 @@ def main(config):
         date = params['time']
         start = pd.Timestamp(datetime.datetime(int(date.split("-")[0]),int(date.split("-")[1]),int(date.split("-")[2])), tz=tz)
     end = start + pd.Timedelta(days=params['period'])
-
+    
+    print(f"starting:{start},ending:{end}")
     model = GFS()
     dataFrame = model.get_processed_data(latitude, longitude, start, end).reset_index().rename(columns={'index':'timestamp'})
-
+    dataFrame.drop(columns=['low_clouds', 'mid_clouds', 'high_clouds'], inplace=True)
+    dataFrame.set_index(pd.to_datetime(dataFrame['timestamp'], infer_datetime_format=True), inplace=True)
+    dataFrame.drop(columns=['timestamp'], inplace=True)
+    dataFrame = dataFrame.resample('30T').interpolate(method='linear') #change to 30min timestamp and use linear interpolation 
+    dataFrame=dataFrame.reset_index().rename(columns={'index':'timestamp'})
+     
     sqlEngine = create_engine(f"mysql+pymysql://{params['username']}:{params['password']}@localhost/convergence_test",pool_recycle=3600)
 
     dbConnection = sqlEngine.connect()
