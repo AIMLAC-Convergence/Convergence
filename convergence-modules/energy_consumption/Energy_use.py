@@ -35,27 +35,25 @@ def temp_cost(T):
     T3 = np.append(T3,T4)
     T3[T3>120] = 120
     T3[T3<0] = 0
-    print(T3)
     return np.sum(T3)
     
 
 # Calculate energy if it's a work day
-if (len(weekday) == 1) and f is None:
-    if (date2 == 12):
-        if (21<=date3<=31):
-            exit
+def total_energy_sum(weekday,date2,date3,f,total_energy):
+    pcs = 10*8.5
+    lighting = 20*8.5
+    t = temp_cost(T)
+    if (len(weekday) == 1) and f is None:
+        if (date2 == 12):
+            if (21<=date3<=31):
+                exit
+            else:
+                total_energy += pcs + lighting + t
         else:
-            pcs = 10*8.5
-            lighting = 20*8.5
-            t = temp_cost(T)
             total_energy += pcs + lighting + t
     else:
-        pcs = 10*8.5
-        lighting = 20*8.5
-        t = temp_cost(T)
-        print(t)
-        total_energy += pcs + lighting + t
-else:
-    exit
+        exit
+    return total_energy
 
-print(total_energy)
+
+total_energy2 = total_energy_sum(weekday,date2,date3,f,total_energy)
