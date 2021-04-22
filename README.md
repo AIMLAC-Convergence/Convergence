@@ -22,7 +22,7 @@ mkdir -p $CONV_LOC && cd $CONV_LOC
 ### Step 2: Clone this repo
 
 ```
-git clone https://github.com/DrewBarratt90/Convergence.git
+git clone https://github.com/AIMLAC-Convergence/Convergence.git
 ```
 
 ### Step 3: Set up the conda env
