@@ -21,15 +21,14 @@ def windEnergy(wSpd, intLength, wT):
     return energy
 
 def solarEnergy(DNI, DHI, z, A, intLength, sP):
-    GTI = (DHI*np.cos((sP['Tilt']) * np.pi/180) + DNI*np.cos((z - sP['Tilt']) * np.pi/180)*np.cos((A - sP['Direction']) * np.pi/180)) * (z < 90.) 
+    GTI = (DHI*np.cos((sP['Tilt']) * np.pi/180)  + (DNI*np.cos((z - sP['Tilt']) * np.pi/180) * (A > 90. and A < 270.) *np.cos((A - sP['Direction']) * np.pi/180)) ) * (z < 90.)  
     power = GTI * sP['Area'] * sP['Eff']
     power = ((power*(power <= sP['Cutoff'])) + (sP['Cutoff'] * (power > sP['Cutoff']))) * sP['Count']
     energy = power * intLength
     return energy
 
-def get_Power(forecast, params):
+def get_Power(forecast, params, intLength):
     powerdict = []
-    intLength = (forecast['timestamp'][1] - forecast['timestamp'][0]).total_seconds()
     for index, ts in forecast.iterrows():
         se = solarEnergy(ts['dni'],ts['dhi'],ts['zenith'],ts['azimuth'],intLength, params['solar'])
         we = windEnergy(ts['wind_speed'], intLength, params['wind'])
@@ -81,7 +80,8 @@ def main(config):
     finally:
         dbConnection.close()
     #Calculate expected power production
-    pf = get_Power(df, params)
+    intLength = (df['timestamp'][1] - df['timestamp'][0]).total_seconds()
+    pf = get_Power(df, params, intLength)
     #Send power production information to database
     dbConnection = sqlEngine.connect()
     try:
