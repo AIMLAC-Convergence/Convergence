@@ -14,7 +14,13 @@ def error_mitigation(temp,wind,sunrise,sunset):
     temp_act = 0
     eff_calc = 0
 
+    report = [[0 for c in range(4)] for r in range(48)]
+    warn1=''
+    warn2=''
+
     for i in range(48):
+
+        report[i][0] = i
 
         # Calculate the actual temperature of panel
         if i >= (sunrise*2 + 1) and i <= ((sunset*2) +1):
@@ -25,6 +31,8 @@ def error_mitigation(temp,wind,sunrise,sunset):
 
         if eff_calc > panel_efficiency:
             eff_calc = panel_efficiency # Can't be more efficient than rated in negative temp
+
+        report[i][1] = eff_calc
 
         # Calculate panel efficiency throughout the day accounting for temp
         if i%2 == 0:
@@ -43,21 +51,33 @@ def error_mitigation(temp,wind,sunrise,sunset):
         # Warnings
         if i > sunrise*2 and i < sunset*2:
             if temp_act > 35 or temp_act < 15:
-                print('`--->  Solar panel output will be affected by temperature.')
+                warn1 = '`--->  Solar panel output will be affected by temperature.'
+                print(warn1)
+
+        report[i][2] = warn1
 
         if wind[i] < 3.5:
-            print('`--->  Wind too low for turbine to work.')
+            warn2 = '`--->  Wind too low for turbine to work.'
         elif wind[i] > 25 and wind[i] <= 52:
-            print('`--->  Wind too high for turbine to work.')
+            warn2 = '`--->  Wind too high for turbine to work.'
         elif wind[i] > 52:
-            print('`--->  Turbine go crrrrrrack.')
+            warn2 = '`--->  Turbine go crrrrrrack.'
+            print(warn2)
+
+        report[i][3] = warn2
 
         print('**********')
 
+    return report
 
+
+
+'''
+Sample values
 temp = np.array([7,7,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,7,7,7,7,7,7,7,7,7,7,7,7,6,6,6,6,5,5,5,5,5,5]) # temperature degrees centigrade
 wind = np.array([2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,4,4,5,5,4,4,4,4,4,4,4,4]) # wind speed in m/s
-sunrise = 7
-sunset = 20
+sunrise = 7 # 7am
+sunset = 20 # 8pm
+'''
 
-error_mitigation(temp,wind,sunrise,sunset)
+print(error_mitigation(temp,wind,sunrise,sunset))
