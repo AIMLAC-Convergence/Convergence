@@ -1,11 +1,9 @@
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from dataclasses import dataclass
-from sqlalchemy import create_engine
 import pymysql
 import pandas as pd
 import datetime
 import pvlib
 from pvlib.forecast import GFS, NAM, NDFD, HRRR, RAP
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import os
 import yaml
 import re
@@ -13,7 +11,7 @@ import re
 from utils.sql_utils import *
 
 global model 
-model = GFS()
+model = NAM()
 
 class DataFrame:
     def __init__(self):
@@ -100,7 +98,7 @@ def main(config):
             exit()
     
     df = DataFrame()   #initialise dataframe
-    location, cycles, tz = params['location'], params['period'], 'Etc/Greenwich'
+    location, cycles, tz = params['location'], params['period'], 'US/Arizona'
     df.location = (location)
     df.cycles = cycles
 
@@ -118,10 +116,10 @@ def main(config):
     #wind_data = df.get_wind_data()      #wind only 
     #sun_data = df.get_sun_data()        #solar only
 
-    dump_sql(all_data, params['name'], params['username'], params['password'])    #create MySQL table
+    dump_sql(all_data, params['forecastname'], params['username'], params['password'])    #create MySQL table
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("config" , nargs="+", help="Path to YAML config file")
+    parser.add_argument("-c", "--config" , nargs="+", help="Path to YAML config file")
     args = parser.parse_args()
     main(args.config)
