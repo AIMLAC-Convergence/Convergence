@@ -9,7 +9,6 @@ import yaml
 import re
 
 from utils.sql_utils import *
-
 global model 
 model = NAM()
 

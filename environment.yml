@@ -6,5 +6,6 @@ dependencies:
   - pandas
   - matplotlib 
   - pytest
+  - plotly
 
  
