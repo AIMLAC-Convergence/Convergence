@@ -17,10 +17,10 @@ def test_temp_cost(T,expect):
     assert output == expect
     
 
-@pytest.mark.parametrize("weekday,date2,date3,f,total_energy,expect",[
-    ([1],[4],[15],[None],[4800],[5691.0])
+@pytest.mark.parametrize("weekday2,date2,date3,f,total_energy,expect",[
+    (1,4,15,None,4800,5691.0)
     ])
-def test_total_energy_sum(weekday,date2,date3,f,total_energy,expect):
-    output = total_energy_sum(weekday,date2,date3,f,total_energy)
+def test_total_energy_sum(weekday2,date2,date3,f,total_energy,expect):
+    output = total_energy_sum(weekday2,date2,date3,f,total_energy)
     
     assert output == expect
