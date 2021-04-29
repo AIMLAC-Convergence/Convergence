@@ -16,7 +16,7 @@ import os
 
 
 def windEnergy(wSpd, intLength, wT):
-    yval = np.exp(np.interp(wSpd / 2.237, wT['PCx'], np.log(np.array(wT['PCy']) + 1))) - 1.
+    yval = np.exp(np.interp(wSpd , wT['PCx'], np.log(np.array(wT['PCy']) + 1))) - 1.
     energy = yval* ((wSpd > wT['Cutin']) and (wSpd < wT['Cutoff'])) * wT['Count'] * intLength
     return energy
 
