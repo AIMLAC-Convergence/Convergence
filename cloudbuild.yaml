@@ -1,8 +1,8 @@
 steps:
   # Install dependencies
-  - name: python
-    entrypoint: pip
-    args: ["install", "-r", "requirements.txt", "--user"]
+  - name: continuumio/anaconda3
+    entrypoint: conda
+    args: ["env", "create", "-f", "environment.yml"]
 # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
