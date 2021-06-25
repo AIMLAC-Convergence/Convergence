@@ -9,7 +9,7 @@ steps:
   args: ['build', '-t', 
          'us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA', '.']
          
- # Docker push to Google Artifact Registry
+ # Docker push to Google Artifact Registry  
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push',  'us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA']
   
