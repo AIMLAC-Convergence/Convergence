@@ -6,6 +6,12 @@ dependencies:
   - pandas
   - matplotlib 
   - pytest
+  - pyyaml
   - flask
-
+  - seaborn
+  - plotly
+  - sqlalchemy
+  - pymysql
+  - pvlib::pvlib
+  - conda-forge::siphon
  
