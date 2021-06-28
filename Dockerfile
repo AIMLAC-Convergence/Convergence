@@ -6,7 +6,7 @@ WORKDIR /app
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
-RUN apt-get install gcc musl-dev
+RUN apt-get -y install gcc musl-dev
 
 EXPOSE 80
 
