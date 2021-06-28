@@ -7,10 +7,13 @@ import plotly
 import plotly.express as px
 import plotly.graph_objs as go
 import matplotlib.pyplot as plt
+from flask install flask
 
 from utils.sql_utils import *
 from convergence_modules.weather_prediction.pvlib_to_sql import main as weather
 from convergence_modules.energy_production.energy_production import main as energy
+
+app = Flask(__name__)
 
 def actually_produce_plots(df, title):
     fig = go.Figure([{
@@ -45,7 +48,9 @@ def main(config):
         params = content['params']
     produce_plots(params)
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
+@app.route('/')
+def web_run():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("config" , nargs="+", help="Path to YAML config file")
     args = parser.parse_args()
