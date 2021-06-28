@@ -49,7 +49,7 @@ def main(config):
     produce_plots(params)
 
 #if __name__ == "__main__":
-@app.route('/')
+@app.route('/update')
 def web_run():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("config" , nargs="+", help="Path to YAML config file")
