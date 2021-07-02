@@ -1,19 +1,25 @@
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from dataclasses import dataclass
-from sqlalchemy import create_engine
-import pymysql
 import pandas as pd
 import datetime
 import pvlib
 from pvlib.forecast import GFS, NAM, NDFD, HRRR, RAP
-import os
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import yaml
-import re
+import logging
+
+logger =logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
+
+file_handler=logging.FileHandler('auto_bidder.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+
 
 from utils.sql_utils import *
-
 global model 
-model = GFS()
+model = NAM()
 
 class DataFrame:
     def __init__(self):
@@ -91,16 +97,16 @@ def main(config):
          content = yaml.load(file, Loader=yaml.FullLoader)
          params = content['params']
 
-    keys = ['name','location', 'username', 'password']
+    keys = ['weather_table','location', 'username', 'password']
     for key in keys:
         try:
             params[key]
         except KeyError:
-            print(f'KeyError! Must provide: {key}')
+            logger.exception(f'KeyError! Must provide: {key}')
             exit()
     
     df = DataFrame()   #initialise dataframe
-    location, cycles, tz = params['location'], params['period'], 'Etc/Greenwich'
+    location, cycles, tz = params['location'], params['period'], 'US/Arizona' #'Etc/Greenwich'
     df.location = (location)
     df.cycles = cycles
 
@@ -112,16 +118,15 @@ def main(config):
             df.start = pd.Timestamp(datetime.datetime(int(date.split("-")[0]),int(date.split("-")[1]),int(date.split("-")[2])), tz=tz)
     df.end = (df.start + pd.Timedelta(days=df.cycles))
 
-    print(f"starting: {df.start} , ending: {df.end}")
- 
+    logger.info('Starting:{}, ending: {}'.format(df.start, df.end))
+    
     all_data = df()                      #solar and wind data 
     #wind_data = df.get_wind_data()      #wind only 
     #sun_data = df.get_sun_data()        #solar only
-
-    dump_sql(all_data, params['name'], params['username'], params['password'])    #create MySQL table
+    dump_sql(all_data, params['weather_table'], params['username'], params['password'])    #create MySQL table
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("config" , nargs="+", help="Path to YAML config file")
+    parser.add_argument("-c", "--config" , nargs="+", help="Path to YAML config file")
     args = parser.parse_args()
     main(args.config)
