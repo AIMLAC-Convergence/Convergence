@@ -46,16 +46,17 @@ def main(config):
          params = yaml.load(file, Loader=yaml.FullLoader)['params'] 
          
     #Check all the required information is in the params file
-    keys = ['name','username', 'password','forecastname','wind','solar','units']
+    keys = ['production_table','username', 'password','weather_table','wind','solar','units']
     windkeys = ['Cutoff','Cutin','Count','PCy','PCx']
     solarkeys = ['Cutoff','Eff','Count','Area','Tilt', 'Direction']
+
     for key in keys:
         try:
             params[key]
         except KeyError:
             print(f'KeyError! Must provide: {key}')
             exit()
-    
+
     for key in windkeys:
         try:
             params['wind'][key]
@@ -72,7 +73,7 @@ def main(config):
     sqlEngine = create_engine(f"mysql+pymysql://{params['username']}:{params['password']}@localhost/convergence_test",pool_recycle=3600)
     dbConnection = sqlEngine.connect()
     try:
-        df = pd.read_sql(params['forecastname'], dbConnection)
+        df = pd.read_sql(params['weather_table'], dbConnection)
     except ValueError as vx:
         print(vx)
     except Exception as ex:   
@@ -85,13 +86,12 @@ def main(config):
     #Send power production information to database
     dbConnection = sqlEngine.connect()
     try:
-        frame = pf.to_sql(params['name'], dbConnection, if_exists='replace', index=False);
+        frame = pf.to_sql(params['production_table'], dbConnection, if_exists='replace', index=False);
     except ValueError as vx:
         print(vx)
     except Exception as ex:   
         print(ex)
     else:
-        print("Table %s created successfully."%params['name']);   
+        print("Table %s created successfully."%params['production_table']);   
     finally:
         dbConnection.close()
-
