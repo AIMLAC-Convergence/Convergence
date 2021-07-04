@@ -14,6 +14,8 @@ import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 from flask import Flask
 
+app = Flask(__name__)
+
 logger =logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -101,7 +103,7 @@ def submit_bid(prices, to_sell):
 # Will take the left over energy, the predicted clearout prices and
 #create array of 24 bids for the next day, and then sumbit to the API
 
-def main(config):
+def run_main(config):
     #run modules
     weather(config) #hacky, needs changing
     logger.info("---CHECKPOINT: Calculating energy produced---")
@@ -125,8 +127,27 @@ def main(config):
 	
     #submit_bid(market_prices, to_sell)
 
-if __name__ == "__main__":
+@app.route('/hello')
+def web_hello():
+	return 'hi'
+#    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
+#    parser.add_argument("config" , nargs="+", help="Path to YAML config file")
+#    args = parser.parse_args()
+#    main(args.config)
+
+@app.route('/update')
+def web_update():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("config" , nargs="+", help="Path to YAML config file")
     args = parser.parse_args()
-    main(args.config)
+    run_main(args.config)
+	
+    return 'Update complete!'
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=8080)	
+	
+
+
+
+	
