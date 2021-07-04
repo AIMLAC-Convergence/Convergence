@@ -19,7 +19,7 @@ logger.addHandler(file_handler)
 
 from utils.sql_utils import *
 global model 
-model = NAM()
+model = GFS()
 
 class DataFrame:
     def __init__(self):
@@ -109,7 +109,7 @@ def main(config):
             exit()
     
     df = DataFrame()   #initialise dataframe
-    location, cycles, tz = params['location'], params['period'], 'US/Arizona' #'Etc/Greenwich'
+    location, cycles, tz = params['location'], params['period'], 'Etc/Greenwich'
     df.location = (location)
     df.cycles = cycles
 

@@ -9,9 +9,9 @@ def dump_sql(df, tableName, username, password):
     try:
         frame = df.to_sql(tableName, dbConnection, if_exists='replace', index=False);
     except ValueError as vx:
-        print(vx)
+        print("ValueError:" + str(vx))
     except Exception as ex:   
-        print(ex)
+        print("Exception:" + str(ex))
     else:
         print("Table %s created successfully."%tableName);   
     finally:
@@ -26,9 +26,9 @@ def load_sql(tableName, username, password):
     try:
         df = pd.read_sql(tableName, dbConnection)
     except ValueError as vx:
-        print(vx)
+        print("ValueError:" + str(vx))
     except Exception as ex:   
-        print(ex)
+        print("Exception:" + str(ex))
     finally:
         dbConnection.close()
     return df
