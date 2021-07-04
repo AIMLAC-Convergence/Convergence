@@ -1,8 +1,6 @@
 steps:
   # Install dependencies
-  - name: continuumio/anaconda3
-    entrypoint: conda
-    args: ["env", "create", "-f", "environment.yml"]
+  - name: python:3.8-slim-buster
 # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 

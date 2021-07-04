@@ -44,7 +44,7 @@ def actually_produce_plots(df, title):
        fig.update_yaxes(title_text='kWh')
 	
     fig.write_html("web/static/" + title.replace(" ", "") + ".html")
-    fig.write_image("web/static/images/" + title.replace(" ", "") + ".png")
+    #fig.write_image("web/static/images/" + title.replace(" ", "") + ".png")
     return True
 
 def produce_plots(params):
