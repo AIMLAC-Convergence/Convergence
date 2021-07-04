@@ -1,26 +1,26 @@
-FROM continuumio/miniconda3
+FROM python:3.8-slim-buster
 
 WORKDIR /app
 
 # Create the environment:
-ENV FLASK_APP=app/run_modules.py
+ENV FLASK_APP=app/exec_function.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
-#RUN apt-get -y install gcc musl-dev
+RUN apt-get update && apt-get install -y git
 
 EXPOSE 8080
 
-COPY environment.yml .
-RUN conda env create -f environment.yml
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-input -r /app/requirements.txt
 
-# Make RUN commands use the new environment:
-SHELL ["conda", "run", "-n", "convergence-env", "/bin/bash", "-c"]
+ARG aimlac_IP=34.72.51.59
+ENV AIMLAC_CC_MACHINE=$aimlac_IP
 
 # The code to run when container is started:
-COPY run_modules.py /app
+COPY exec_function.py /app
 COPY convergence_modules /app/convergence_modules
+COPY Model /app/Model
 COPY utils /app/utils
 COPY settings.yaml /app
 
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "convergence-env", "python", "run_modules.py", "settings.yaml"]
-#ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "convergence-env", "python", "hello.py"]
+ENTRYPOINT ["python", "exec_function.py", "settings.yaml"]

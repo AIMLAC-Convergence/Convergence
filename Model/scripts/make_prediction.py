@@ -1,5 +1,6 @@
 import numpy as np
-import keras
+import tensorflow as tf
+from tensorflow import keras
 from sklearn.preprocessing import MinMaxScaler
 import logging
 
@@ -21,7 +22,7 @@ class Predictor:
     def predict(self):
         scaler = MinMaxScaler(feature_range=(0, 1))
         logger.info("---CHECKPOINT: Compiling model with TensorFlow backend---")
-        reconstructed_model = keras.models.load_model(self._model)
+        reconstructed_model = tf.keras.models.load_model(self._model)
         reconstructed_model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
         try:
            data = np.array(self._input_data).reshape(24,1,1)
