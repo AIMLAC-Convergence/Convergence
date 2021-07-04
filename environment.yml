@@ -17,6 +17,7 @@ dependencies:
   - keras
   - pvlib::pvlib
   - conda-forge::siphon
+  - conda-forge::python-kaleido
  
 variables:
   AIMLAC_CC_MACHINE: 34.72.51.59

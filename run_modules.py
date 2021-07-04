@@ -28,7 +28,7 @@ def actually_produce_plots(df, title):
     return True
 
 def produce_plots(params):
-    df_energy = load_sql(params['name'], params['username'], params['password']).set_index("timestamp")
+    df_energy = load_sql(params['production_table'], params['username'], params['password']).set_index("timestamp")
     df_weather = load_sql(params['forecastname'], params['username'], params['password']).set_index("timestamp")
     df_energy.drop(columns=['units'], inplace = True)
     df_energy.rename(columns={'solar_energy':'solar_energy(kWh)', 'wind_energy':'wind_energy(kWh)'}, inplace = True)

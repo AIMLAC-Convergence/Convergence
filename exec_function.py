@@ -40,12 +40,21 @@ def actually_produce_plots(df, title):
     fig.update_layout(title_text = title)
     if title == 'Energy':
        fig.update_yaxes(title_text='kWh')
-    fig.show()
+    #fig.show()
+	
+    if not os.path.exists("images"):
+        os.mkdir("images")
+	
+    if not os.path.exists("graph"):
+        os.mkdir("graph")
+	
+    fig.write_html("graph/" + title + ".html")
+    fig.write_image("images/" + title + ".png")
     return True
 
 def produce_plots(params):
     df_energy = load_sql(params['production_table'], params['username'], params['password']).set_index("timestamp")
-    df_weather = load_sql(params['forecastname'], params['username'], params['password']).set_index("timestamp")
+    df_weather = load_sql(params['weather_table'], params['username'], params['password']).set_index("timestamp")
     df_energy.drop(columns=['units'], inplace = True)
     df_energy.rename(columns={'solar_energy':'solar_energy(kWh)', 'wind_energy':'wind_energy(kWh)'}, inplace = True)
     actually_produce_plots(df_energy, "Energy")
@@ -103,6 +112,8 @@ def main(config):
     with open(config[0]) as file:
         content = yaml.load(file, Loader=yaml.FullLoader)
         params = content['params']
+		
+    produce_plots(params)
     
     logger.info("---CHECKPOINT: Clear-out prices---")
     start_date = date.today() - timedelta(days=2)
@@ -111,6 +122,7 @@ def main(config):
     price_predictor = Predictor(params['model'],clearout_prices)
     market_prices = price_predictor.predict()
     to_sell = energy_surplus(params)
+	
     #submit_bid(market_prices, to_sell)
 
 if __name__ == "__main__":
