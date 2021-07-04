@@ -59,6 +59,9 @@ class DataFrame:
 
     def get_wind_data(self):
         lattitude, longitude = self.location[0], self.location[1]
+        print("Getting wind data")
+        print("Start time:", str(self.start))
+        print("End time:", str(self.end))
         dataFrame = model.get_processed_data(lattitude, longitude, self.start, self.end).reset_index().rename(columns={'index':'timestamp'})
         dataFrame.drop(columns=['low_clouds', 'mid_clouds', 'high_clouds'], inplace=True)
         dataFrame.set_index(pd.to_datetime(dataFrame['timestamp'], infer_datetime_format=True), inplace=True)

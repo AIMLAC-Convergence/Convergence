@@ -22,5 +22,5 @@ COPY convergence_modules /app/convergence_modules
 COPY utils /app/utils
 COPY settings.yaml /app
 
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "convergence-env", "python", "run_modules.py", "config", "settings.yaml"]
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "convergence-env", "python", "run_modules.py", "settings.yaml"]
 #ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "convergence-env", "python", "hello.py"]

@@ -13,7 +13,7 @@ from utils.sql_utils import *
 from convergence_modules.weather_prediction.pvlib_to_sql import main as weather
 from convergence_modules.energy_production.energy_production import main as energy
 
-app = Flask(__name__)
+#app = Flask(__name__)
 
 def actually_produce_plots(df, title):
     fig = go.Figure([{
@@ -48,12 +48,18 @@ def main(config):
         params = content['params']
     produce_plots(params)
 
-@app.route('/update')
-def web_run():
+if __name__ == '__main__':
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("config" , nargs="+", help="Path to YAML config file")
     args = parser.parse_args()
     main(args.config)
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)	
+#if __name__ == '__main__':
+#    app.run(debug=True, host='0.0.0.0', port=8080)	
+#	
+#@app.route('/update')
+#def web_run():
+#    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
+#    parser.add_argument("config" , nargs="+", help="Path to YAML config file")
+#    args = parser.parse_args()
+#    main(args.config)
