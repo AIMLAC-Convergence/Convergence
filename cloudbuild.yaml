@@ -5,14 +5,18 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
            'europe-west2-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA', '.']
+    timeout: 600s
  # Docker push to Google Artifact Registry  
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push',  'europe-west2-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA']
+    timeout: 600s
  # Deploy to Cloud Run  
   - name: google/cloud-sdk
     args: ['gcloud', 'run', 'deploy', 'convergence', 
            '--image=europe-west2-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA', 
            '--region', 'europe-west2', '--platform', 'managed', 
-           '--allow-unauthenticated']         
+           '--allow-unauthenticated']
+    timeout: 600s
 images:
   - europe-west2-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA
+timeout: 1800s
