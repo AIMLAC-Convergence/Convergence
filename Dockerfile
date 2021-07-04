@@ -17,11 +17,11 @@ ARG aimlac_IP=34.72.51.59
 ENV AIMLAC_CC_MACHINE=$aimlac_IP
 
 # The code to run when container is started:
-COPY exec_function.py /app
-COPY convergence_modules /app/convergence_modules
-COPY Model /app/Model
-COPY utils /app/utils
-COPY settings.yaml /app
-COPY web /app/web
+COPY ./exec_function.py /app
+COPY ./convergence_modules /app/convergence_modules
+COPY ./Model /app/Model
+COPY ./utils /app/utils
+COPY ./settings.yaml /app
+COPY ./web /app/web
 
 ENTRYPOINT ["python", "exec_function.py", "settings.yaml"]
