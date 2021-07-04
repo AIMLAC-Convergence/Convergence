@@ -6,6 +6,7 @@ Created on Thu Feb 18 15:57:59 2021
 """
 
 from sqlalchemy import create_engine
+from utils.sql_utils import *
 import pymysql
 
 import numpy as np
@@ -69,29 +70,12 @@ def main(config):
         except KeyError:
             print(f'KeyError! Must provide: [wind][{key}]')
             exit()
-    #Get the forecast data from the database
-    sqlEngine = create_engine(f"mysql+pymysql://{params['username']}:{params['password']}@localhost/convergence_test",pool_recycle=3600)
-    dbConnection = sqlEngine.connect()
-    try:
-        df = pd.read_sql(params['weather_table'], dbConnection)
-    except ValueError as vx:
-        print(vx)
-    except Exception as ex:   
-        print(ex)
-    finally:
-        dbConnection.close()
+	
+    df = load_sql(params['weather_table'],params['username'],params['password'],params['db_address'])
+		
     #Calculate expected power production
     intLength = (df['timestamp'][1] - df['timestamp'][0]).total_seconds()
     pf = get_Power(df, params, intLength)
-    #Send power production information to database
-    dbConnection = sqlEngine.connect()
-    try:
-        frame = pf.to_sql(params['production_table'], dbConnection, if_exists='replace', index=False);
-    except ValueError as vx:
-        print(vx)
-    except Exception as ex:   
-        print(ex)
-    else:
-        print("Table %s created successfully."%params['production_table']);   
-    finally:
-        dbConnection.close()
+	
+    dump_sql(pf, params['production_table'],params['username'],params['password'],params['db_address'])
+	
