@@ -22,5 +22,6 @@ COPY convergence_modules /app/convergence_modules
 COPY Model /app/Model
 COPY utils /app/utils
 COPY settings.yaml /app
+COPY web /app/web
 
 ENTRYPOINT ["python", "exec_function.py", "settings.yaml"]

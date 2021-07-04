@@ -12,9 +12,9 @@ import plotly
 import plotly.express as px
 import plotly.graph_objs as go
 import matplotlib.pyplot as plt
-from flask import Flask
+from flask import Flask, send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='web/static', template_folder='web/templates')
 
 logger =logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -42,16 +42,9 @@ def actually_produce_plots(df, title):
     fig.update_layout(title_text = title)
     if title == 'Energy':
        fig.update_yaxes(title_text='kWh')
-    #fig.show()
 	
-    if not os.path.exists("images"):
-        os.mkdir("images")
-	
-    if not os.path.exists("graph"):
-        os.mkdir("graph")
-	
-    fig.write_html("graph/" + title + ".html")
-    fig.write_image("images/" + title + ".png")
+    fig.write_html("web/static/" + title.replace(" ", "") + ".html")
+    fig.write_image("web/static/images/" + title.replace(" ", "") + ".png")
     return True
 
 def produce_plots(params):
@@ -130,10 +123,6 @@ def run_main(config):
 @app.route('/hello')
 def web_hello():
 	return 'hi'
-#    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-#    parser.add_argument("config" , nargs="+", help="Path to YAML config file")
-#    args = parser.parse_args()
-#    main(args.config)
 
 @app.route('/update')
 def web_update():
@@ -144,10 +133,10 @@ def web_update():
 	
     return 'Update complete!'
 
+@app.route('/', methods=['GET'])
+def redirect_to_index():
+    return send_from_directory('web/static', 'index.html')
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8080)	
-	
-
-
-
 	

@@ -4,7 +4,7 @@ params:
    consumption_table: "consumption_table"
    username : "Will"
    password : "humani2" 
-   db_address : "localhost"
+   db_address : "192.168.1.64"
    location: !!python/tuple [52.1051, -3.6680]
    time: "Now"
    period: 1
