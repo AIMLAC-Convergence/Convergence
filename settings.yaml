@@ -5,7 +5,9 @@ params:
    username : "convergence"
    password : "24sgt5ppm" 
    db_address : "aimlac-containers:europe-north1:convergenced"
-   #db_address : "34.89.92.140"
+   db_accesstype : "UNIX"
+   #db_address : "localhost"
+   #db_accesstype : "IP"
    location: !!python/tuple [52.1051, -3.6680]
    time: "Now"
    period: 1
