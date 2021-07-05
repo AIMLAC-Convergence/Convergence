@@ -18,5 +18,5 @@ steps:
            '--allow-unauthenticated', '--ingress=all', '--port=8080', '--set-cloudsql-instances=aimlac-containers:europe-north1:convergenced']
     timeout: 600s
 images:
-  - europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA
+  - europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA
 timeout: 1800s
