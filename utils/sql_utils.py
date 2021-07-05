@@ -5,7 +5,7 @@ def dump_sql(df, tableName, username, password, address='localhost'):
 
     print("Dumping to " + tableName)
 
-    sqlEngine = create_engine(f"mysql+pymysql://{username}:{password}@{address}/convergence_test",pool_recycle=3600)
+    sqlEngine = create_engine(f"mysql+pymysql://{username}:{password}@/convergence_test?unix_socket=/cloudsql/{address}",pool_recycle=3600)
 
     dbConnection = sqlEngine.connect()
     try:
@@ -25,7 +25,7 @@ def load_sql(tableName, username, password, address='localhost'):
 
     print("Reading From " + tableName)
 
-    sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@{address}/convergence_test',pool_recycle=3600)
+    sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@/convergence_test?unix_socket=/cloudsql/{address}',pool_recycle=3600)
     dbConnection = sqlEngine.connect()
     try:
         df = pd.read_sql(tableName, dbConnection)
