@@ -126,7 +126,7 @@ def main(config):
     all_data = df()                      #solar and wind data 
     #wind_data = df.get_wind_data()      #wind only 
     #sun_data = df.get_sun_data()        #solar only
-    dump_sql(all_data, params['weather_table'], params['username'], params['password'],params['db_address'])    #create MySQL table
+    dump_sql(all_data, params['weather_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])    #create MySQL table
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)

@@ -71,11 +71,11 @@ def main(config):
             print(f'KeyError! Must provide: [wind][{key}]')
             exit()
 	
-    df = load_sql(params['weather_table'],params['username'],params['password'],params['db_address'])
+    df = load_sql(params['weather_table'],params['username'],params['password'],params['db_address'],params['db_accesstype'])
 		
     #Calculate expected power production
     intLength = (df['timestamp'][1] - df['timestamp'][0]).total_seconds()
     pf = get_Power(df, params, intLength)
 	
-    dump_sql(pf, params['production_table'],params['username'],params['password'],params['db_address'])
+    dump_sql(pf, params['production_table'],params['username'],params['password'],params['db_address'],params['db_accesstype'])
 	

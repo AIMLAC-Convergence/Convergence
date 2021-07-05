@@ -62,7 +62,7 @@ def main(config):
          content = yaml.load(file, Loader=yaml.FullLoader)
          params = content['params']
 
-    frame = load_sql(params['weather_table'],params['username'],params['password'],params['db_address'])
+    frame = load_sql(params['weather_table'],params['username'],params['password'],params['db_address'],params['db_accesstype'])
 
     T = frame['temp_air'].values
     at_work = work_time(frame.timestamp)
@@ -73,7 +73,7 @@ def main(config):
     energy_use = total_energy_sum(at_work,T)
     df = pd.DataFrame(data=energy_use,columns=['energy_use'])
     
-    dump_sql(df, params['consumption_table'],params['username'],params['password'],params['db_address'])
+    dump_sql(df, params['consumption_table'],params['username'],params['password'],params['db_address'],params['db_accesstype'])
     
     
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ def dump_sql(df, tableName, username, password, address='localhost', accesstype=
 
     if accesstype=='UNIX':
         sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@/convergence_test?unix_socket=/cloudsql/{address}',pool_recycle=3600)
-	else:
+    else:
 	    sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@{address}/convergence_test',pool_recycle=3600)
 
     dbConnection = sqlEngine.connect()
@@ -30,7 +30,7 @@ def load_sql(tableName, username, password, address='localhost', accesstype='IP'
 
     if accesstype=='UNIX':
         sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@/convergence_test?unix_socket=/cloudsql/{address}',pool_recycle=3600)
-	else:
+    else:
 	    sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@{address}/convergence_test',pool_recycle=3600)
 		
     dbConnection = sqlEngine.connect()

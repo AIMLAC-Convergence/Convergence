@@ -48,8 +48,8 @@ def actually_produce_plots(df, title):
     return True
 
 def produce_plots(params):
-    df_energy = load_sql(params['production_table'], params['username'], params['password'], params['db_address']).set_index("timestamp")
-    df_weather = load_sql(params['weather_table'], params['username'], params['password'], params['db_address']).set_index("timestamp")
+    df_energy = load_sql(params['production_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
+    df_weather = load_sql(params['weather_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
     df_energy.drop(columns=['units'], inplace = True)
     df_energy.rename(columns={'solar_energy':'solar_energy(kWh)', 'wind_energy':'wind_energy(kWh)'}, inplace = True)
     actually_produce_plots(df_energy, "Energy")
@@ -82,8 +82,8 @@ def get_clearout_prices(start, end):
     return prices2
     
 def energy_surplus(params):
-    df_energy = load_sql(params['production_table'], params['username'], params['password'],params['db_address'])
-    df_energy_cons = load_sql(params['consumption_table'],params['username'], params['password'], params['db_address'])
+    df_energy = load_sql(params['production_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])
+    df_energy_cons = load_sql(params['consumption_table'],params['username'], params['password'], params['db_address'],params['db_accesstype'])
     surplus = df_energy['solar_energy'] +  df_energy['wind_energy'] - df_energy_cons['energy_use']
     return np.array(surplus)
 
