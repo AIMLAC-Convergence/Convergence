@@ -94,7 +94,7 @@ def plot_prices(market_prices):
     fig.update_layout(title_text = "Market Prices")
     fig.update_xaxes(title_text='Hour of the day')
     fig.update_yaxes(title_text='Price')
-	filename =  "Market_Price.html"
+    filename =  "Market_Price.html"
     fig.write_html(filename)
     upload_blob(filename,filename)
     return True
