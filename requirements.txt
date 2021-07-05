@@ -1,6 +1,7 @@
 numpy==1.19.5
 pandas
-matplotlib 
+matplotlib
+google-cloud-storage
 tables
 pytest
 pyyaml

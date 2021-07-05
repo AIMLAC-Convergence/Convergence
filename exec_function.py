@@ -32,6 +32,28 @@ from convergence_modules.weather_prediction.pvlib_to_sql import main as weather
 from convergence_modules.energy_production.energy_production import main as energy
 from convergence_modules.energy_consumption.Energy_use import main as energy_cons
 from Model.scripts.make_prediction import Predictor
+from google.cloud import storage
+
+def upload_blob(source_file_name, destination_blob_name):
+    """Uploads a file to the bucket."""
+    # The ID of your GCS bucket
+    # bucket_name = "your-bucket-name"
+    # The path to your file to upload
+    # source_file_name = "local/path/to/file"
+    # The ID of your GCS object
+    # destination_blob_name = "storage-object-name"
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket("convergence-public")
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_filename(source_file_name)
+
+    print(
+        "File {} uploaded to {}.".format(
+            source_file_name, destination_blob_name
+        )
+    )
 
 def actually_produce_plots(df, title):
     fig = go.Figure([{
@@ -42,8 +64,12 @@ def actually_produce_plots(df, title):
     fig.update_layout(title_text = title)
     if title == 'Energy' or title == 'Energy Usage':
        fig.update_yaxes(title_text='kWh')
-	
-    fig.write_html("web/static/" + title.replace(" ", "") + ".html")
+
+    filename = title.replace(" ", "") + ".html"
+    	
+    #fig.write_html("web/static/" + title.replace(" ", "") + ".html")
+    fig.write_html(filename)
+    upload_blob(filename,filename)
     #fig.write_image("web/static/images/" + title.replace(" ", "") + ".png")
     return True
 
@@ -68,7 +94,9 @@ def plot_prices(market_prices):
     fig.update_layout(title_text = "Market Prices")
     fig.update_xaxes(title_text='Hour of the day')
     fig.update_yaxes(title_text='Price')
-    fig.write_html("web/static/" + "Market_Price" + ".html")
+    filename =  "Market_Price.html"
+    fig.write_html(filename)
+    upload_blob(filename,filename)
     return True
 
 def get_clearout_prices(start, end):
