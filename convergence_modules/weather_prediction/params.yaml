@@ -1,7 +1,7 @@
 params:
   name : "weather_table" #name of SQL table
-  username: ""
-  password: ""
+  username: "Will"
+  password: "humani2"
   location: !!python/tuple [52.1051, -3.6680]  #lat, lon coordinates
   time: "Now"  #either Now or provide date in form: "YYYY-M-D"
   period: 3    #number of 24-Hr periods for forecasting

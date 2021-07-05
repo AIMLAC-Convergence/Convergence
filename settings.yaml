@@ -2,12 +2,16 @@ params:
    production_table : "energyproduction_table" 
    weather_table: "forecast_table"
    consumption_table: "consumption_table"
-   username : "root"
-   password : "" 
-   location: !!python/tuple [32.2, -110.9]  #[52.1051, -3.6680]
-   time: Now      #"2021-4-30"
+   username : "convergence"
+   password : "24sgt5ppm" 
+   db_address : "aimlac-containers:europe-north1:convergenced"
+   db_accesstype : "UNIX"
+   #db_address : "localhost"
+   #db_accesstype : "IP"
+   location: !!python/tuple [52.1051, -3.6680]
+   time: "Now"
    period: 1
    wind: {Cutoff: 25., Cutin: 3.5, Count: 2., PCy: [0.,0.,0.,0.,0.,1.8e+03,7.7e+03,15.1e+03,24.8e+03,34.1e+03,43.9e+03,50.3e+03,54.8e+03,58.9e+03,63.5e+03,65.6e+03,66.8e+03,66.8e+03,67.2e+03,66.4e+03], PCx:[0.,1.,2.,3.,3.5,4. ,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.]}
    solar: {Cutoff: 335., Eff: 0.196, Count: 1400., Area: 1.712976, Tilt: 45., Direction: 180.}
    units: 'kWh'
-   model: '/Users/ys20884/Desktop/Work_Area/AIMLAC/coding_challange/CONV_software/Convergence/Model' #change this
+   model: 'Model' #change this

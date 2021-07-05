@@ -19,7 +19,7 @@ logger.addHandler(file_handler)
 
 from utils.sql_utils import *
 global model 
-model = NAM()
+model = GFS()
 
 class DataFrame:
     def __init__(self):
@@ -65,6 +65,9 @@ class DataFrame:
 
     def get_wind_data(self):
         lattitude, longitude = self.location[0], self.location[1]
+        print("Getting wind data")
+        print("Start time:", str(self.start))
+        print("End time:", str(self.end))
         dataFrame = model.get_processed_data(lattitude, longitude, self.start, self.end).reset_index().rename(columns={'index':'timestamp'})
         dataFrame.drop(columns=['low_clouds', 'mid_clouds', 'high_clouds'], inplace=True)
         dataFrame.set_index(pd.to_datetime(dataFrame['timestamp'], infer_datetime_format=True), inplace=True)
@@ -106,7 +109,7 @@ def main(config):
             exit()
     
     df = DataFrame()   #initialise dataframe
-    location, cycles, tz = params['location'], params['period'], 'US/Arizona' #'Etc/Greenwich'
+    location, cycles, tz = params['location'], params['period'], 'Etc/Greenwich'
     df.location = (location)
     df.cycles = cycles
 
@@ -123,7 +126,7 @@ def main(config):
     all_data = df()                      #solar and wind data 
     #wind_data = df.get_wind_data()      #wind only 
     #sun_data = df.get_sun_data()        #solar only
-    dump_sql(all_data, params['weather_table'], params['username'], params['password'])    #create MySQL table
+    dump_sql(all_data, params['weather_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])    #create MySQL table
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)

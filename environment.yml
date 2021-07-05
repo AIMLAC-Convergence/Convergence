@@ -2,9 +2,22 @@ name: convergence-env
 
 dependencies:
   - python=3.8
-  - numpy
+  - conda-forge::numpy=1.19.5
   - pandas
   - matplotlib 
   - pytest
-
+  - pyyaml
+  - flask
+  - seaborn
+  - plotly
+  - sqlalchemy
+  - pymysql
+  - holidays
+  - scikit-learn
+  - keras
+  - pvlib::pvlib
+  - conda-forge::siphon
+  - conda-forge::python-kaleido
  
+variables:
+  AIMLAC_CC_MACHINE: 34.72.51.59

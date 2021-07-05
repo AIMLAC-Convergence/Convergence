@@ -15,24 +15,10 @@ import sys
 import yaml
 #sys.path.insert(1,'C:/Users/c1616132/Documents/phd_stuff/coding_challenge/Convergence/utils')
 sys.path.insert(1,'/Convergence/utils')
-from utils.sql_utils import dump_sql
+from utils.sql_utils import *
 from sqlalchemy import create_engine
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
-def load_sql(tableName, username, password):
-
-    sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@localhost/convergence_test',pool_recycle=3600)
-    dbConnection = sqlEngine.connect()
-    try:
-        df = pd.read_sql(tableName, dbConnection)
-    except ValueError as vx:
-        print(vx)
-    except Exception as ex:   
-        print(ex)
-    finally:
-        dbConnection.close()
-
-    return df
 
 def work_time(dates):
     at_work = np.zeros(len(dates))
@@ -76,7 +62,7 @@ def main(config):
          content = yaml.load(file, Loader=yaml.FullLoader)
          params = content['params']
 
-    frame = load_sql(params['weather_table'],params['username'],params['password'])
+    frame = load_sql(params['weather_table'],params['username'],params['password'],params['db_address'],params['db_accesstype'])
 
     T = frame['temp_air'].values
     at_work = work_time(frame.timestamp)
@@ -87,7 +73,7 @@ def main(config):
     energy_use = total_energy_sum(at_work,T)
     df = pd.DataFrame(data=energy_use,columns=['energy_use'])
     
-    dump_sql(df, params['consumption_table'],params['username'],params['password'])
+    dump_sql(df, params['consumption_table'],params['username'],params['password'],params['db_address'],params['db_accesstype'])
     
     
 if __name__ == "__main__":
