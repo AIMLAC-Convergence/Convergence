@@ -58,6 +58,16 @@ def produce_plots(params):
     actually_produce_plots(df_weather.loc[:,['wind_speed']], "Wind speed")
     actually_produce_plots(df_weather.loc[:,['temp_air']], "Temperature")
 
+def plot_prices(market_prices):
+    fig=go.Figure({
+        'x' : np.arange(0,24,1),
+        'y' : market_prices.reshape(24)
+    })
+    fig.update_layout(title_text = "Market Prices")
+    fig.update_xaxes(title_text='Hour of the day')
+    fig.update_yaxes(title_text='Price')
+    fig.write_html("web/static/" + "Market_Price" + ".html")
+    return True
 
 def get_clearout_prices(start, end):
     AIMLAC_CC_MACHINE = os.getenv("AIMLAC_CC_MACHINE")
@@ -97,27 +107,28 @@ def submit_bid(prices, to_sell):
 #create array of 24 bids for the next day, and then sumbit to the API
 
 def run_main(config):
+   
     #run modules
     weather(config) #hacky, needs changing
     logger.info("---CHECKPOINT: Calculating energy produced---")
     energy(config)
     logger.info("---CHECKPOINT: Calculating energy consumed---")
     energy_cons(config)
-	
+
     with open(config[0]) as file:
         content = yaml.load(file, Loader=yaml.FullLoader)
         params = content['params']
 		
     produce_plots(params)
-    
+
     logger.info("---CHECKPOINT: Clear-out prices---")
     start_date = date.today() - timedelta(days=2)
     end_date = date.today() + timedelta(days=0)
     clearout_prices = get_clearout_prices(start_date, end_date)
     price_predictor = Predictor(params['model'],clearout_prices)
     market_prices = price_predictor.predict()
-    to_sell = energy_surplus(params)
-	
+    plot_prices(market_prices)
+    #to_sell = energy_surplus(params)
     #submit_bid(market_prices, to_sell)
 
 @app.route('/hello')
