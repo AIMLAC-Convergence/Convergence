@@ -40,7 +40,7 @@ def actually_produce_plots(df, title):
     'name': col
     }  for col in df.columns])
     fig.update_layout(title_text = title)
-    if title == 'Energy':
+    if title == 'Energy' or title == 'Energy Usage':
        fig.update_yaxes(title_text='kWh')
 	
     fig.write_html("web/static/" + title.replace(" ", "") + ".html")
@@ -50,6 +50,7 @@ def actually_produce_plots(df, title):
 def produce_plots(params):
     df_energy = load_sql(params['production_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
     df_weather = load_sql(params['weather_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
+    df_usage = load_sql(params['consumption_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).tail(24)
     df_energy.drop(columns=['units'], inplace = True)
     df_energy.rename(columns={'solar_energy':'solar_energy(kWh)', 'wind_energy':'wind_energy(kWh)'}, inplace = True)
     actually_produce_plots(df_energy, "Energy")
@@ -57,6 +58,7 @@ def produce_plots(params):
     actually_produce_plots(df_weather.loc[:, ['zenith', 'azimuth', 'apparent_zenith']], "Solar angles")
     actually_produce_plots(df_weather.loc[:,['wind_speed']], "Wind speed")
     actually_produce_plots(df_weather.loc[:,['temp_air']], "Temperature")
+    actually_produce_plots(df_usage, "Energy Usage")
 
 def plot_prices(market_prices):
     fig=go.Figure({
