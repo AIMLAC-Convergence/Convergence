@@ -4,7 +4,7 @@ params:
    consumption_table: "consumption_table"
    username : "convergence"
    password : "24sgt5" 
-   db_address : "aimlac-containers:europe-west2:convergence-alpha"
+   db_address : "34.89.92.140"
    #db_address : "34.89.92.140"
    location: !!python/tuple [52.1051, -3.6680]
    time: "Now"
