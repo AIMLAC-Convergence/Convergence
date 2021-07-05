@@ -2,12 +2,12 @@ steps:
   # Install dependencies
   - name: python:3.8-slim-buster
 # Docker Build
-  - name: 'eu.gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
            'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA', '.']
     timeout: 600s
  # Docker push to Google Artifact Registry  
-  - name: 'eu.gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/cloud-builders/docker'
     args: ['push',  'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA']
     timeout: 600s
  # Deploy to Cloud Run  
