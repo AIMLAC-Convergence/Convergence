@@ -33,6 +33,7 @@ from convergence_modules.energy_production.energy_production import main as ener
 from convergence_modules.energy_consumption.Energy_use import main as energy_cons
 from Model.scripts.make_prediction import Predictor
 from google.cloud import storage
+import datetime
 
 def upload_blob(source_file_name, destination_blob_name):
     """Uploads a file to the bucket."""
@@ -136,7 +137,7 @@ def submit_bid(prices, to_sell):
         logger.error(f"{AIMLAC_CC_MACHINE} is invalid")
     host = f"http://{AIMLAC_CC_MACHINE}"
     applying_date = date.today() + timedelta(days=1)
-    prices = prices - 0.1*mean(prices)
+    prices = prices - 0.1*np.mean(prices)
     json1 = []
     for i in range(0,len(prices)):
         json1.append({
@@ -159,8 +160,17 @@ def submit_bid(prices, to_sell):
         logger.info('---Posted bids, {} bids accepted---'.format(d['accepted']))
     else:
         logger.error('---Failed to post bids, only {} accepted---'.format(d['accepted']))
-    
 
+    df_bid = pd.DataFrame(columns={'timestamp','Bid_Price', 'Energy(KWh)'})
+    dates = pd.date_range(date.today(), date.today() + timedelta(days=1), freq='H').to_list()
+    dates = dates[:-1]
+    df_bid['timestamp'] = dates
+    df_bid['Bid_Price'] = prices
+    df_bid['Energy(KwH)'] = to_sell
+    df_bid.to_html(df_bid.html,index=False)
+    upload_blob(df_bid.html,df_bid.html)
+    return True
+    
 """Get weather data from PVLib"""
 
 # Will take the left over energy, the predicted clearout prices and
