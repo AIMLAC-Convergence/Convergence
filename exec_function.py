@@ -129,7 +129,37 @@ def energy_surplus(params):
 
 """Produce API bid and submit to API"""
 def submit_bid(prices, to_sell):
-    pass
+    AIMLAC_CC_MACHINE = os.getenv("AIMLAC_CC_MACHINE")
+    if AIMLAC_CC_MACHINE is not None:
+        pass
+    else:
+        logger.error(f"{AIMLAC_CC_MACHINE} is invalid")
+    host = f"http://{AIMLAC_CC_MACHINE}"
+    applying_date = date.today() + timedelta(days=1)
+    prices = prices - 0.1*mean(prices)
+    json1 = []
+    for i in range(0,len(prices)):
+        json1.append({
+                     "applying_date": applying_date.isoformat(),
+                     "hour_ID": i+1,
+                     "type": "BUY",
+                     "volume": str(to_sell[i]),
+                     "price": str(prices[i])
+                     })
+    
+    p = requests.post(url=host + "/auction/bidding/set",
+                  json={
+                      "key":
+                      "TESTKEY",
+                      "orders": json1
+                  })
+
+    d = p.json()
+    if d['accepted'] == len(prices):
+        logger.info('---Posted bids, {} bids accepted---'.format(d['accepted']))
+    else:
+        logger.error('---Failed to post bids, only {} accepted---'.format(d['accepted']))
+    
 
 """Get weather data from PVLib"""
 
@@ -158,8 +188,10 @@ def run_main(config):
     price_predictor = Predictor(params['model'],clearout_prices)
     market_prices = price_predictor.predict()
     plot_prices(market_prices)
-    #to_sell = energy_surplus(params)
-    #submit_bid(market_prices, to_sell)
+    logger.info("---CHECKPOINT: Calculating power to sell---")
+    to_sell = energy_surplus(params)
+    logger.info("---CHECKPOINT: Submitting bid to API---")
+    submit_bid(market_prices, to_sell)
 
 @app.route('/hello')
 def web_hello():
