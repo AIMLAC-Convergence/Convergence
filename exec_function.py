@@ -33,6 +33,7 @@ from convergence_modules.energy_production.energy_production import main as ener
 from convergence_modules.energy_consumption.Energy_use import main as energy_cons
 from Model.scripts.make_prediction import Predictor
 from google.cloud import storage
+import datetime
 
 def upload_blob(source_file_name, destination_blob_name):
     """Uploads a file to the bucket."""
@@ -129,8 +130,47 @@ def energy_surplus(params):
 
 """Produce API bid and submit to API"""
 def submit_bid(prices, to_sell):
-    pass
+    AIMLAC_CC_MACHINE = os.getenv("AIMLAC_CC_MACHINE")
+    if AIMLAC_CC_MACHINE is not None:
+        pass
+    else:
+        logger.error(f"{AIMLAC_CC_MACHINE} is invalid")
+    host = f"http://{AIMLAC_CC_MACHINE}"
+    applying_date = date.today() + timedelta(days=1)
+    prices = prices - 0.1*np.mean(prices)
+    json1 = []
+    for i in range(0,len(prices)):
+        json1.append({
+                     "applying_date": applying_date.isoformat(),
+                     "hour_ID": i+1,
+                     "type": "BUY",
+                     "volume": str(to_sell[i]),
+                     "price": str(prices[i])
+                     })
+    
+    p = requests.post(url=host + "/auction/bidding/set",
+                  json={
+                      "key":
+                      "TESTKEY",
+                      "orders": json1
+                  })
 
+    d = p.json()
+    if d['accepted'] == len(prices):
+        logger.info('---Posted bids, {} bids accepted---'.format(d['accepted']))
+    else:
+        logger.error('---Failed to post bids, only {} accepted---'.format(d['accepted']))
+
+    df_bid = pd.DataFrame(columns={'timestamp','Bid_Price', 'Energy(KWh)'})
+    dates = pd.date_range(date.today(), date.today() + timedelta(days=1), freq='H').to_list()
+    dates = dates[:-1]
+    df_bid['timestamp'] = dates
+    df_bid['Bid_Price'] = prices
+    df_bid['Energy(KwH)'] = to_sell
+    df_bid.to_html(df_bid.html,index=False)
+    upload_blob(df_bid.html,df_bid.html)
+    return True
+    
 """Get weather data from PVLib"""
 
 # Will take the left over energy, the predicted clearout prices and
@@ -158,8 +198,10 @@ def run_main(config):
     price_predictor = Predictor(params['model'],clearout_prices)
     market_prices = price_predictor.predict()
     plot_prices(market_prices)
-    #to_sell = energy_surplus(params)
-    #submit_bid(market_prices, to_sell)
+    logger.info("---CHECKPOINT: Calculating power to sell---")
+    to_sell = energy_surplus(params)
+    logger.info("---CHECKPOINT: Submitting bid to API---")
+    submit_bid(market_prices, to_sell)
 
 @app.route('/hello')
 def web_hello():
