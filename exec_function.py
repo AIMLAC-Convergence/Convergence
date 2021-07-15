@@ -200,6 +200,8 @@ def run_main(config):
     plot_prices(market_prices)
     logger.info("---CHECKPOINT: Calculating power to sell---")
     to_sell = energy_surplus(params)
+    # get last 24 entries (if this runs multiple times it gets larger)
+    to_sell = to_sell[-24:]
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices, to_sell)
 
