@@ -161,7 +161,7 @@ def submit_bid(prices, to_sell):
     else:
         logger.error('---Failed to post bids, only {} accepted---'.format(d['accepted']))
 
-    df_bid = pd.DataFrame(columns={'timestamp','Bid_Price', 'Energy(KWh)'})
+    df_bid = pd.DataFrame(columns={'timestamp','Bid_Price', 'Energy(KwH)'})
     dates = pd.date_range(date.today(), date.today() + timedelta(days=1), freq='H').to_list()
     dates = dates[:-1]
     df_bid['timestamp'] = dates
