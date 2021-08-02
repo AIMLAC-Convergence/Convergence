@@ -18,6 +18,7 @@ import time
 from datetime import date, timedelta
 import requests
 from Model.scripts.rnn_model import RNN_Model
+from google.cloud import storage
 
 # In[2]:
 
