@@ -166,7 +166,7 @@ def submit_bid(prices, to_sell):
     dates = dates[:-1]
     df_bid['timestamp'] = dates
     df_bid['Bid_Price'] = prices
-    df_bid['Energy(KwH)'] = to_sell
+    df_bid['Energy(KwH)'] = to_sell[-24:]
     df_bid.to_html(df_bid.html,index=False)
     upload_blob(df_bid.html,df_bid.html)
     return True
