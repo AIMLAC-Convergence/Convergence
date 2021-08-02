@@ -56,6 +56,24 @@ def upload_blob(source_file_name, destination_blob_name):
         )
     )
 
+
+def download_blob(remote_blob_name, local_file_name):
+    """Uploads a file to the bucket."""
+    # The ID of your GCS bucket
+    # bucket_name = "your-bucket-name"
+    # The path to your file to upload
+    # source_file_name = "local/path/to/file"
+    # The ID of your GCS object
+    # destination_blob_name = "storage-object-name"
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket("convergence-public")
+    blob = bucket.blob(remote_file_name)
+
+    blob.download_to_filename(local_file_name)
+
+
+
 def actually_produce_plots(df, title):
     fig = go.Figure([{
     'x': df.index,
@@ -191,11 +209,15 @@ def run_main(config):
 		
     produce_plots(params)
 
-    logger.info("---CHECKPOINT: Clear-out prices---")
+    logger.info("---CHECKPOINT: Pulling Clear-out prices---")
     start_date = date.today() - timedelta(days=2)
     end_date = date.today() + timedelta(days=0)
     clearout_prices = get_clearout_prices(start_date, end_date)
-    price_predictor = Predictor(params['model'],clearout_prices)
+
+    logger.info("---CHECKPOINT: Pulling most recent market prediction model---")
+    local_model_filename = "Model/saved_model.pb"
+    download_blob("trained_model.pb", local_model_filename)
+    price_predictor = Predictor(local_model_filename,clearout_prices)
     market_prices = price_predictor.predict()
     plot_prices(market_prices)
     logger.info("---CHECKPOINT: Calculating power to sell---")
