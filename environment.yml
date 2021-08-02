@@ -15,6 +15,7 @@ dependencies:
   - holidays
   - scikit-learn
   - keras
+  - gcsfs
   - pvlib::pvlib
   - conda-forge::siphon
   - conda-forge::python-kaleido
