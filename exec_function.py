@@ -203,9 +203,6 @@ def run_main(config):
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices, to_sell)
 
-from google.oauth2 import service_account
-import googleapiclient.discovery
-
 import gcsfs
 
 @app.route('/gcsfs')
