@@ -9,7 +9,7 @@ steps:
     timeout: 600s
  # Docker push to Google Artifact Registry  
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push',  'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/retrain:$SHORT_SHA']
+    args: ['push',  'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/retrain:latest']
     timeout: 600s
 images:
   - europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/retrain:$SHORT_SHA
