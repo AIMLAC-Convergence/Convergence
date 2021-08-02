@@ -203,6 +203,23 @@ def run_main(config):
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices, to_sell)
 
+from google.oauth2 import service_account
+import googleapiclient.discovery
+
+import gcsfs
+
+@app.route('/gcsfs')
+def gcsfs_test():
+    fs = gcsfs.GCSFileSystem(project='aimlac-containers',token='cloud')
+    fs.ls('convergence-public')
+    with fs.open('convergence-public/test.txt', 'rb') as f:
+        print(f.read())
+
+    with fs.open('convergence-public/new-file', 'wb') as f:
+        f.write(2*2**20 * b'a') # data is flushed and file closed
+        fs.du('mybucket/new-file')
+
+
 @app.route('/hello')
 def web_hello():
 	return 'hi'
