@@ -1,9 +1,21 @@
 from sqlalchemy import create_engine
 import pandas as pd
 
+import logging
+
+logger =logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
+
+file_handler=logging.FileHandler('auto_bidder.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+
 def dump_sql(df, tableName, username, password, address='localhost', accesstype='IP'):
 
-    print("Dumping to " + tableName)
+    logging.info("Dumping to " + tableName + " at address " + address + " via " + accesstype)
 
     if accesstype=='UNIX':
         sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@/convergence_test?unix_socket=/cloudsql/{address}',pool_recycle=3600)
@@ -14,11 +26,11 @@ def dump_sql(df, tableName, username, password, address='localhost', accesstype=
     try:
         frame = df.to_sql(tableName, dbConnection, if_exists='replace', index=False);
     except ValueError as vx:
-        print("ValueError:" + str(vx))
+        logging.info("ValueError:" + str(vx))
     except Exception as ex:   
-        print("Exception:" + str(ex))
+        logging.info("Exception:" + str(ex))
     else:
-        print("Table %s created successfully."%tableName);   
+        logging.info("Table %s created successfully."%tableName);   
     finally:
         dbConnection.close()
 
@@ -26,7 +38,7 @@ def dump_sql(df, tableName, username, password, address='localhost', accesstype=
 
 def load_sql(tableName, username, password, address='localhost', accesstype='IP'):
 
-    print("Reading From " + tableName)
+    logging.info("Reading From " + tableName + " at address " + address + " via " + accesstype)
 
     if accesstype=='UNIX':
         sqlEngine = create_engine(f'mysql+pymysql://{username}:{password}@/convergence_test?unix_socket=/cloudsql/{address}',pool_recycle=3600)
@@ -37,9 +49,9 @@ def load_sql(tableName, username, password, address='localhost', accesstype='IP'
     try:
         df = pd.read_sql(tableName, dbConnection)
     except ValueError as vx:
-        print("ValueError:" + str(vx))
+        logging.info("ValueError:" + str(vx))
     except Exception as ex:   
-        print("Exception:" + str(ex))
+        logging.info("Exception:" + str(ex))
     finally:
         dbConnection.close()
     return df

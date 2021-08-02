@@ -161,14 +161,14 @@ def submit_bid(prices, to_sell):
     else:
         logger.error('---Failed to post bids, only {} accepted---'.format(d['accepted']))
 
-    df_bid = pd.DataFrame(columns={'timestamp','Bid_Price', 'Energy(KWh)'})
+    df_bid = pd.DataFrame(columns={'timestamp','Bid_Price', 'Energy(KwH)'})
     dates = pd.date_range(date.today(), date.today() + timedelta(days=1), freq='H').to_list()
     dates = dates[:-1]
     df_bid['timestamp'] = dates
     df_bid['Bid_Price'] = prices
     df_bid['Energy(KwH)'] = to_sell[-24:]
-    df_bid.to_html(df_bid.html,index=False)
-    upload_blob(df_bid.html,df_bid.html)
+    df_bid.to_html('df_bid.html',index=False)
+    upload_blob('df_bid.html','df_bid.html')
     return True
     
 """Get weather data from PVLib"""
@@ -200,6 +200,8 @@ def run_main(config):
     plot_prices(market_prices)
     logger.info("---CHECKPOINT: Calculating power to sell---")
     to_sell = energy_surplus(params)
+    # get last 24 entries (if this runs multiple times it gets larger)
+    to_sell = to_sell[-24:]
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices, to_sell)
 
