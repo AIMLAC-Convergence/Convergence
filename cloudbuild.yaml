@@ -4,8 +4,7 @@ steps:
 # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/retrain:$SHORT_SHA', '-t', 
-           'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/retrain:latest', '.']
+           'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/retrain:$SHORT_SHA', '.']
     timeout: 600s
  # Docker push to Google Artifact Registry  
   - name: 'gcr.io/cloud-builders/docker'

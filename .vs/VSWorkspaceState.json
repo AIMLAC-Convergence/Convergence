@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\convergence_modules",
+    "\\convergence_modules\\energy_consumption",
+    "\\convergence_modules\\energy_production",
+    "\\convergence_modules\\utils",
+    "\\convergence_modules\\weather_prediction",
+    "\\convergence_modules\\webserver",
+    "\\utils"
+  ],
+  "SelectedNode": "\\exec_function.py",
+  "PreviewInSolutionExplorer": false
+}
