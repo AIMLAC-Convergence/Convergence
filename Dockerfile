@@ -3,8 +3,8 @@ FROM python:3.8-slim-buster
 WORKDIR /app
 
 # Create the environment:
-ENV FLASK_APP=app/exec_function.py
-ENV FLASK_RUN_HOST=0.0.0.0
+#ENV FLASK_APP=app/exec_function.py
+#ENV FLASK_RUN_HOST=0.0.0.0
 
 RUN apt-get update && apt-get install -y git
 
@@ -24,4 +24,4 @@ COPY ./utils /app/utils
 COPY ./settings.yaml /app
 COPY ./web /app/web
 
-ENTRYPOINT ["python", "exec_function.py", "settings.yaml"]
+ENTRYPOINT ["python", "train_RNN_gcsfs.py"]

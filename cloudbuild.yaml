@@ -4,19 +4,12 @@ steps:
 # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA', '.']
+           'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/retrain:$SHORT_SHA', '.']
     timeout: 600s
  # Docker push to Google Artifact Registry  
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push',  'europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA']
     timeout: 600s
- # Deploy to Cloud Run  
-  - name: google/cloud-sdk
-    args: ['gcloud', 'run', 'deploy', 'convergence', 
-           '--image=europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA', 
-           '--region', 'europe-north1', '--platform', 'managed', '--max-instances=1',
-           '--allow-unauthenticated', '--ingress=all', '--port=8080', '--set-cloudsql-instances=aimlac-containers:europe-north1:convergenced']
-    timeout: 600s
 images:
-  - europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/myimage:$SHORT_SHA
+  - europe-north1-docker.pkg.dev/$PROJECT_ID/$_REPO/retrain:$SHORT_SHA
 timeout: 1800s
