@@ -214,7 +214,7 @@ def gcsfs_test():
 
     with fs.open('convergence-public/new-file', 'wb') as f:
         f.write(2*2**20 * b'a') # data is flushed and file closed
-        fs.du('mybucket/new-file')
+        fs.du('convergence-public/new-file')
 
 
 @app.route('/hello')
