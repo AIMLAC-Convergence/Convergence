@@ -184,7 +184,7 @@ def submit_bid(prices, to_sell):
     dates = dates[:-1]
     df_bid['timestamp'] = dates
     df_bid['Bid_Price'] = prices
-    df_bid['Energy(KwH)'] = to_sell[-24:]
+    df_bid['Energy(KwH)'] = to_sell
     df_bid.to_html('df_bid.html',index=False)
     upload_blob('df_bid.html','df_bid.html')
     return True
@@ -222,8 +222,8 @@ def run_main(config):
     plot_prices(market_prices)
     logger.info("---CHECKPOINT: Calculating power to sell---")
     to_sell = energy_surplus(params)
-    # get last 24 entries (if this runs multiple times it gets larger)
-    to_sell = to_sell[-24:]
+    #get last 48 entries (if this runs multiple times it gets larger)
+    to_sell = to_sell[-48:]
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices, to_sell)
 
