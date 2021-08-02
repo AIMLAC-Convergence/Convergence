@@ -17,7 +17,7 @@ ARG aimlac_IP=34.72.51.59
 ENV AIMLAC_CC_MACHINE=$aimlac_IP
 
 # The code to run when container is started:
-COPY ./exec_function.py /app
+COPY ./train_RNN_gcsfs.py /app
 COPY ./convergence_modules /app/convergence_modules
 COPY ./Model /app/Model
 COPY ./utils /app/utils
