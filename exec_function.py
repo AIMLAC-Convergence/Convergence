@@ -216,7 +216,7 @@ def run_main(config):
 
     logger.info("---CHECKPOINT: Pulling most recent market prediction model---")
     local_model_filename = "Model/saved_model.pb"
-    download_blob("trained_model.pb", local_model_filename)
+    download_blob("model/trained_model.pb", local_model_filename)
     price_predictor = Predictor(local_model_filename,clearout_prices)
     market_prices = price_predictor.predict()
     plot_prices(market_prices)
