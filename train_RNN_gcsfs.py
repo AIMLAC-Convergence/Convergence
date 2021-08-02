@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -20,11 +17,9 @@ import requests
 from Model.scripts.rnn_model import RNN_Model
 from google.cloud import storage
   
-# In[2]:
+# if the rebuild has actually worked you should see this comment in the cat output
 
 import os
-
-# In[ ]:
 
 
 def get_clearout_prices(start, end):
