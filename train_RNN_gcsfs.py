@@ -133,8 +133,8 @@ def upload_blob(source_file_name, destination_blob_name):
 # such as over SSH or from a remote Jupyter notebook.
 
 #appflow = flow.InstalledAppFlow.from_client_secrets_file(
-    "client_secrets.json", scopes=["https://www.googleapis.com/auth/bigquery"]
-)
+#    "client_secrets.json", scopes=["https://www.googleapis.com/auth/bigquery"]
+#)
 
 #if launch_browser:
 #    appflow.run_local_server()
