@@ -208,14 +208,14 @@ import gcsfs
 @app.route('/gcsfs')
 def gcsfs_test():
     fs = gcsfs.GCSFileSystem(project='aimlac-containers',token='cloud')
-    fs.ls('convergence-public')
+    g = fs.ls('convergence-public')
     with fs.open('convergence-public/test.txt', 'rb') as f:
         print(f.read())
 
     with fs.open('convergence-public/new-file', 'wb') as f:
         f.write(2*2**20 * b'a') # data is flushed and file closed
         fs.du('convergence-public/new-file')
-
+    return g
 
 @app.route('/hello')
 def web_hello():
