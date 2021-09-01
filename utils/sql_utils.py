@@ -24,7 +24,7 @@ def dump_sql(df, tableName, username, password, address='localhost', accesstype=
 
     dbConnection = sqlEngine.connect()
     try:
-        frame = df.to_sql(tableName, dbConnection, if_exists='replace', index=False);
+        frame = df.to_sql(tableName, dbConnection, if_exists='append', index=False)
     except ValueError as vx:
         logging.info("ValueError:" + str(vx))
     except Exception as ex:   
