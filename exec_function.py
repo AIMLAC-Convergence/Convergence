@@ -221,6 +221,7 @@ def run_main(config):
     download_blob("model/trained_model.pb", local_model_filename)
     price_predictor = Predictor(local_model_filename,clearout_prices)
     market_prices = price_predictor.predict()
+    times = pd.date_range(date.today(), periods=48, freq='30T')
     #resample price_preditor to 30 minute 
     #Has problems at last time stamp as it is interpolating past its boundary
     market_prices_interp = sgnl.resample(market_prices, 48)
@@ -232,6 +233,7 @@ def run_main(config):
     to_sell = to_sell[-48:]
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices_interp, to_sell)
+    pf = pd.DataFrame(data={'Market prices':market_prices, 'timestamps':times})
 
 @app.route('/hello')
 def web_hello():
