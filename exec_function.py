@@ -14,6 +14,8 @@ import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 from flask import Flask, send_from_directory
 
+import scipy.signals as sgnl
+
 app = Flask(__name__, static_url_path='', static_folder='web/static', template_folder='web/templates')
 
 logger =logging.getLogger(__name__)
@@ -221,7 +223,7 @@ def run_main(config):
     market_prices = price_predictor.predict()
     #resample price_preditor to 30 minute 
     #Has problems at last time stamp as it is interpolating past its boundary
-    market_prices_interp = np.interp(np.arange(0., 24., 0.5), np.arange(0., 24., 1.), market_prices)
+    market_prices_interp = sgnl.resample(market_prices, 48)
     plot_prices(market_prices_interp)
     logger.info("---CHECKPOINT: Calculating power to sell---")
     to_sell = energy_surplus(params)
