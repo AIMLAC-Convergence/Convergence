@@ -219,13 +219,16 @@ def run_main(config):
     download_blob("model/trained_model.pb", local_model_filename)
     price_predictor = Predictor(local_model_filename,clearout_prices)
     market_prices = price_predictor.predict()
-    plot_prices(market_prices)
+    #resample price_preditor to 30 minute 
+    #Has problems at last time stamp as it is interpolating past its boundary
+    market_prices_interp = np.interp(np.arange(0., 24., 0.5), np.arange(0., 24., 1.), market_prices)
+    plot_prices(market_prices_interp)
     logger.info("---CHECKPOINT: Calculating power to sell---")
     to_sell = energy_surplus(params)
     #get last 48 entries (if this runs multiple times it gets larger)
     to_sell = to_sell[-48:]
     logger.info("---CHECKPOINT: Submitting bid to API---")
-    submit_bid(market_prices, to_sell)
+    submit_bid(market_prices_interp, to_sell)
 
 @app.route('/hello')
 def web_hello():
