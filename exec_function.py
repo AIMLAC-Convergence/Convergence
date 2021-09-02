@@ -232,8 +232,9 @@ def run_main(config):
     #get last 48 entries (if this runs multiple times it gets larger)
     to_sell = to_sell[-48:]
     #Puts stuff in a dataframe why not
-    pf = pd.DataFrame(data={'MarketPrices':market_prices_interp,'EnergySurplus':to_sell, 'TimeStamps':times})
-    plot_prices(pf)
+    df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp,'EnergySurplus(kWh)':to_sell, 'TimeStamps':times})
+    df_market_price.set_index('TimeStamps', inplace=True)
+    actually_produce_plots(df_market_price, "Market Data")
     
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices_interp, to_sell)
