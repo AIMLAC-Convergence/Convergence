@@ -1,4 +1,6 @@
 params:
+   bid_table: "bid_table"
+   market_table: "market_table"
    production_table : "energyproduction_table" 
    weather_table: "forecast_table"
    consumption_table: "consumption_table"
