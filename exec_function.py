@@ -231,10 +231,13 @@ def run_main(config):
     to_sell = energy_surplus(params)
     #get last 48 entries (if this runs multiple times it gets larger)
     to_sell = to_sell[-48:]
-    logger.info("---CHECKPOINT: Submitting bid to API---")
-    submit_bid(market_prices_interp, to_sell)
+    #Puts stuff in a dataframe why not
     pf = pd.DataFrame(data={'MarketPrices':market_prices_interp,'EnergySurplus':to_sell, 'TimeStamps':times})
     plot_prices(pf)
+    
+    logger.info("---CHECKPOINT: Submitting bid to API---")
+    submit_bid(market_prices_interp, to_sell)
+    
     
 @app.route('/hello')
 def web_hello():
