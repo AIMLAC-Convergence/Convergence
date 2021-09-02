@@ -100,6 +100,11 @@ def produce_plots(params):
     df_usage = load_sql(params['consumption_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).tail(24)
     df_energy.drop(columns=['units'], inplace = True)
     df_energy.rename(columns={'solar_energy':'solar_energy(kWh)', 'wind_energy':'wind_energy(kWh)'}, inplace = True)
+    df_price = load_sql(params['market_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
+    df_bid = load_sql(params['bid_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
+    df_bid.to_html('df_bid.html',index=False)
+    upload_blob('df_bid.html','df_bid.html')
+    actually_produce_plots(df_price, "Market Price")
     actually_produce_plots(df_energy, "Energy")
     actually_produce_plots(df_weather.loc[:, ['ghi', 'dni', 'dhi']], "Solar quantities")
     actually_produce_plots(df_weather.loc[:, ['zenith', 'azimuth', 'apparent_zenith']], "Solar angles")
@@ -149,7 +154,7 @@ def energy_surplus(params):
     return np.array(surplus)
 
 """Produce API bid and submit to API"""
-def submit_bid(prices, to_sell):
+def submit_bid(prices, to_sell, params):
     AIMLAC_CC_MACHINE = os.getenv("AIMLAC_CC_MACHINE")
     if AIMLAC_CC_MACHINE is not None:
         pass
@@ -187,8 +192,7 @@ def submit_bid(prices, to_sell):
     df_bid['timestamp'] = dates
     df_bid['Bid_Price'] = prices
     df_bid['Energy(KwH)'] = to_sell
-    df_bid.to_html('df_bid.html',index=False)
-    upload_blob('df_bid.html','df_bid.html')
+    dump_sql(df_bid, params['bid_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])
     return True
     
 """Get weather data from PVLib"""
@@ -209,8 +213,6 @@ def run_main(config):
         content = yaml.load(file, Loader=yaml.FullLoader)
         params = content['params']
 		
-    produce_plots(params)
-
     logger.info("---CHECKPOINT: Pulling Clear-out prices---")
     start_date = date.today() - timedelta(days=2)
     end_date = date.today() + timedelta(days=0)
@@ -231,15 +233,15 @@ def run_main(config):
     to_sell = energy_surplus(params)
     #get last 48 entries (if this runs multiple times it gets larger)
     to_sell = to_sell[-48:]
-    #Puts stuff in a dataframe why not
-    df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp,'EnergySurplus(kWh)':to_sell, 'TimeStamps':times})
-    df_market_price.set_index('TimeStamps', inplace=True)
-    actually_produce_plots(df_market_price, "Market Data")
-    
     logger.info("---CHECKPOINT: Submitting bid to API---")
-    submit_bid(market_prices_interp, to_sell)
+    submit_bid(market_prices_interp, to_sell, params)
+    #Puts stuff in a dataframe why not
+    df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp, 'TimeStamps':times})
+    df_market_price.set_index('TimeStamps', inplace=True)
+    dump_sql(df_market_price, params['market_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])
     
-    
+    produce_plots(params)
+  
 @app.route('/hello')
 def web_hello():
 	return 'hi'
