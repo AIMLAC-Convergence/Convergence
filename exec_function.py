@@ -14,6 +14,8 @@ import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 from flask import Flask, send_from_directory
 
+import scipy.signal as sgnl
+
 app = Flask(__name__, static_url_path='', static_folder='web/static', template_folder='web/templates')
 
 logger =logging.getLogger(__name__)
@@ -107,8 +109,8 @@ def produce_plots(params):
 
 def plot_prices(market_prices):
     fig=go.Figure({
-        'x' : np.arange(0,24,1),
-        'y' : market_prices.reshape(24)
+        'x' : market_prices['TimeStamps'].values,
+        'y' : market_prices['MarketPrices'].values
     })
     fig.update_layout(title_text = "Market Prices")
     fig.update_xaxes(title_text='Hour of the day')
@@ -219,14 +221,25 @@ def run_main(config):
     download_blob("model/trained_model.pb", local_model_filename)
     price_predictor = Predictor(local_model_filename,clearout_prices)
     market_prices = price_predictor.predict()
-    plot_prices(market_prices)
+    times = pd.date_range(date.today(), periods=48, freq='30T')
+    #resample price_preditor to 30 minute 
+    #Has problems at last time stamp as it is interpolating past its boundary
+    market_prices_interp = sgnl.resample(market_prices, 48)
+    #market_prices_interp = np.interp(np.arange(0., 24., 0.5), np.arange(0., 24., 1.), market_prices)
+    
     logger.info("---CHECKPOINT: Calculating power to sell---")
     to_sell = energy_surplus(params)
     #get last 48 entries (if this runs multiple times it gets larger)
     to_sell = to_sell[-48:]
+    #Puts stuff in a dataframe why not
+    df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp,'EnergySurplus(kWh)':to_sell, 'TimeStamps':times})
+    df_market_price.set_index('TimeStamps', inplace=True)
+    actually_produce_plots(df_market_price, "Market Data")
+    
     logger.info("---CHECKPOINT: Submitting bid to API---")
-    submit_bid(market_prices, to_sell)
-
+    submit_bid(market_prices_interp, to_sell)
+    
+    
 @app.route('/hello')
 def web_hello():
 	return 'hi'
