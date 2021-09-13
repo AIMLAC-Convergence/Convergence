@@ -164,15 +164,19 @@ def submit_bid(prices, to_sell, params):
         logger.error(f"{AIMLAC_CC_MACHINE} is invalid")
     host = f"http://{AIMLAC_CC_MACHINE}"
     applying_date = date.today() + timedelta(days=1)
-    prices = prices - 0.1*np.mean(prices)
+
+    hourly_prices = prices[::2]
+    hourly_to_sell = to_sell[::2]
+
+    hourly_prices = hourly_prices - 0.1*np.mean(hourly_prices)
     json1 = []
-    for i in range(0,len(prices)-1):
+    for i in range(0,len(hourly_prices)-1):
         json1.append({
                      "applying_date": applying_date.isoformat(),
                      "hour_ID": i+1,
                      "type": "BUY",
-                     "volume": str(to_sell[i]),
-                     "price": str(prices[i])
+                     "volume": str(hourly_to_sell[i]),
+                     "price": str(hourly_prices[i])
                      })
     
     p = requests.post(url=host + "/auction/bidding/set",
@@ -197,8 +201,8 @@ def submit_bid(prices, to_sell, params):
     dates = pd.date_range(date.today(), date.today() + timedelta(days=1), freq='H').to_list()
     dates = dates[:-1]
     df_bid['timestamp'] = dates
-    df_bid['Bid_Price'] = prices
-    df_bid['Energy(KwH)'] = to_sell
+    df_bid['Bid_Price'] = hourly_prices
+    df_bid['Energy(KwH)'] = hourly_to_sell
     dump_sql(df_bid, params['bid_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])
     return True
     
@@ -241,7 +245,7 @@ def run_main(config):
     logger.info("---CHECKPOINT: Calculating power to sell---")
     to_sell = energy_surplus(params)
     #get last 48 entries (if this runs multiple times it gets larger)
-    to_sell = to_sell[-48::2]
+    to_sell = to_sell[-48:]
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices_interp, to_sell, params)
     #Puts stuff in a dataframe why not
