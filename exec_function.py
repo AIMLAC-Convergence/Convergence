@@ -220,8 +220,9 @@ def run_main(config):
 
     logger.info("---CHECKPOINT: Pulling most recent market prediction model---")
     local_model_filename = "Model/saved_model.pb"
+    local_model_path = "Model"
     download_blob("model/trained_model.pb", local_model_filename)
-    price_predictor = Predictor(local_model_filename,clearout_prices)
+    price_predictor = Predictor(local_model_path,clearout_prices)
     market_prices = price_predictor.predict()
     times = pd.date_range(date.today(), periods=48, freq='30T')
     #resample price_preditor to 30 minute 
