@@ -179,6 +179,8 @@ def submit_bid(prices, to_sell, params):
                       "TESTKEY",
                       "orders": json1
                   })
+    result_code = "Result Code:" + str(p.status_code) + ", " + p.text
+    logger.info(result_code)
 
     d = p.json()
     if d['accepted'] == len(prices):
