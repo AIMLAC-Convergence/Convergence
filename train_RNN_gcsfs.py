@@ -143,8 +143,8 @@ def upload_blob(source_file_name, destination_blob_name):
 # In[ ]:
 
 
-upload_blob('model/saved_model.pb', 'model/trained_model.pb')
-
+upload_blob('model/saved_model.pb', 'model/saved_model.pb')
+upload_blob('model/keras_metadata.pb.pb', 'model/keras_metadata.pb.pb')
 
 # In[ ]:
 
