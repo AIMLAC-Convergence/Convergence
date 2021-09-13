@@ -182,7 +182,7 @@ def submit_bid(prices, to_sell, params):
                       "orders": json1
                   })
     result_code = "Result Code:" + str(p.status_code) + ", " + p.text
-    logger.info(result_code)
+    logger.info(p.status_code)
 
     if(result_code<400):
         d = p.json()
