@@ -70,7 +70,7 @@ def download_blob(remote_blob_name, local_file_name):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket("convergence-public")
-    blob = bucket.blob(remote_file_name)
+    blob = bucket.blob(remote_blob_name)
 
     blob.download_to_filename(local_file_name)
 
