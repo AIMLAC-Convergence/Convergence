@@ -18,14 +18,15 @@ from Model.scripts.rnn_model import RNN_Model
 from google.cloud import storage
 
 from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+#from oauth2client.client import GoogleCredentials
   
 # if the rebuild has actually worked you should see this comment in the cat output
 
 import os
 
-credentials = GoogleCredentials.get_application_default()
-service = discovery.build('compute', 'v1', credentials=credentials)
+#credentials = GoogleCredentials.get_application_default()
+#service = discovery.build('compute', 'v1', credentials=credentials)
+service = discovery.build('compute', 'v1')
 
 # Project ID for this request.
 project = 'aimlac-containers'  # Project ID
