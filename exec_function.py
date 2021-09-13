@@ -228,7 +228,8 @@ def run_main(config):
     logger.info("---CHECKPOINT: Pulling most recent market prediction model---")
     local_model_filename = "Model/saved_model.pb"
     local_model_path = "Model"
-    download_blob("model/trained_model.pb", local_model_filename)
+    download_blob("model/saved_model.pb", "Model/saved_model.pb")
+    download_blob("model/keras_metadata.pb", "Model/keras_metadata.pb")
     price_predictor = Predictor(local_model_path,clearout_prices)
     market_prices = price_predictor.predict()
     times = pd.date_range(date.today(), periods=48, freq='30T')
