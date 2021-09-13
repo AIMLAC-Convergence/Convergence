@@ -28,6 +28,8 @@ file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
 
+update_result_state = "Update Completed OK"
+
 #import user modules
 from utils.sql_utils import *
 from convergence_modules.weather_prediction.pvlib_to_sql import main as weather
@@ -182,11 +184,14 @@ def submit_bid(prices, to_sell, params):
     result_code = "Result Code:" + str(p.status_code) + ", " + p.text
     logger.info(result_code)
 
-    d = p.json()
-    if d['accepted'] == len(prices):
-        logger.info('---Posted bids, {} bids accepted---'.format(d['accepted']))
+    if(result_code<400):
+        d = p.json()
+        if d['accepted'] == len(prices):
+            logger.info('---Posted bids, {} bids accepted---'.format(d['accepted']))
+        else:
+            logger.error('---Failed to post bids, only {} accepted---'.format(d['accepted']))
     else:
-        logger.error('---Failed to post bids, only {} accepted---'.format(d['accepted']))
+        update_result_state = "Failed to post bids to server; stats are still available"
 
     df_bid = pd.DataFrame(columns={'timestamp','Bid_Price', 'Energy(KwH)'})
     dates = pd.date_range(date.today(), date.today() + timedelta(days=1), freq='H').to_list()
@@ -256,7 +261,7 @@ def web_update():
     args = parser.parse_args()
     run_main(args.config)
 	
-    return 'Update complete!'
+    return update_result_state
 
 @app.route('/', methods=['GET'])
 def redirect_to_index():
