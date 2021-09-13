@@ -182,9 +182,9 @@ def submit_bid(prices, to_sell, params):
                       "orders": json1
                   })
     result_code = "Result Code:" + str(p.status_code) + ", " + p.text
-    logger.info(p.status_code)
+    logger.info(result_code)
 
-    if(result_code<400):
+    if(p.status_code<400):
         d = p.json()
         if d['accepted'] == len(prices):
             logger.info('---Posted bids, {} bids accepted---'.format(d['accepted']))
