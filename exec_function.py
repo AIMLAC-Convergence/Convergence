@@ -250,8 +250,7 @@ def run_main(config):
     submit_bid(market_prices_interp, to_sell, params)
     
     #Puts stuff in a dataframe why not
-    logger.info(str(market_prices_interp))
-    df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp, 'TimeStamps':times})
+    df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp[0], 'TimeStamps':times})
     df_market_price.set_index('TimeStamps', inplace=True)
     dump_sql(df_market_price, params['market_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])
     
