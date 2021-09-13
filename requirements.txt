@@ -19,3 +19,4 @@ git+git://github.com/pvlib/pvlib-python@1ebe7b05425dc8b3ea4b471f0eec79191cb83812
 siphon
 kaleido
 gcsfs
+google-api-python-client
