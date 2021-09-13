@@ -251,8 +251,8 @@ def run_main(config):
     logger.info("market_prices_interp length:" + str(len(market_prices_interp[:,0])))
     logger.info("times length:" + str(len(times)))
     #Puts stuff in a dataframe why not
-    df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp[:,0], 'TimeStamps':times})
-    df_market_price.set_index('TimeStamps', inplace=True)
+    df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp[:,0], 'timestamp':times})
+    df_market_price.set_index('timestamp', inplace=True)
     dump_sql(df_market_price, params['market_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])
     
     produce_plots(params)
