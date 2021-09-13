@@ -7,6 +7,7 @@ from tensorflow.keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
+from tensorflow.keras.models import save_model
 import ast
 import time
 from datetime import date, timedelta
@@ -45,7 +46,7 @@ class RNN_Model:
         test_results = RNN_Model.make_dataframe(self,test_X, y_pred_test)
         RNN_Model.plot(test_results, pred=True)
         if save == True:
-            model.save('model') 
+            save_model(model,'model') 
             print("Model Saved")
             
     @staticmethod
