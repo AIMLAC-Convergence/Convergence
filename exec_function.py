@@ -166,7 +166,7 @@ def submit_bid(prices, to_sell, params):
     applying_date = date.today() + timedelta(days=1)
     prices = prices - 0.1*np.mean(prices)
     json1 = []
-    for i in range(0,len(prices)):
+    for i in range(0,len(prices)-1):
         json1.append({
                      "applying_date": applying_date.isoformat(),
                      "hour_ID": i+1,
