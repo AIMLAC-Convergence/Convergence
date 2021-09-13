@@ -249,7 +249,7 @@ def run_main(config):
     logger.info("---CHECKPOINT: Submitting bid to API---")
     submit_bid(market_prices_interp, to_sell, params)
     logger.info("market_prices_interp length:" + str(len(market_prices_interp[0]))
-    logger.info("times length:" + str(len(times))
+    logger.info("times length:" + str(len(times)))
     #Puts stuff in a dataframe why not
     df_market_price = pd.DataFrame(data={'MarketPrices':market_prices_interp[0], 'TimeStamps':times})
     df_market_price.set_index('TimeStamps', inplace=True)
