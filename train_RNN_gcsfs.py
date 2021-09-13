@@ -16,10 +16,23 @@ from datetime import date, timedelta
 import requests
 from Model.scripts.rnn_model import RNN_Model
 from google.cloud import storage
+
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
   
 # if the rebuild has actually worked you should see this comment in the cat output
 
 import os
+
+credentials = GoogleCredentials.get_application_default()
+service = discovery.build('compute', 'v1', credentials=credentials)
+
+# Project ID for this request.
+project = 'aimlac-containers'  # Project ID
+# The name of the zone for this request.
+zone = 'europe-north1-a'  # Zone information
+# Name of the instance resource to stop.
+instance = 'retrain-ml-docker-3'  # instance id
 
 
 def get_clearout_prices(start, end):
@@ -148,6 +161,8 @@ upload_blob('model/keras_metadata.pb', 'model/keras_metadata.pb')
 
 # In[ ]:
 
-
+# Now shut down the service to minimise compute usage
+request = service.instances().stop(project=project, zone=zone, instance=instance)
+response = request.execute()
 
 
