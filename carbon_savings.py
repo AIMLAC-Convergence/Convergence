@@ -46,21 +46,23 @@ def test_get_average_power(date):
     return g
 
 def main():
-    date = '2021-09-01'
+    date = datetime.now() - timedelta(days=1)
+    date = date.strftime('%Y-%m-%d')
     ci = carbon_intensity(date)
-    carbon_saved = []
+    carbon_used = []
     date = datetime.strptime(date, '%Y-%m-%d')
     for i in range(0,len(ci),1):
         g = test_get_average_power(date)
         power = g.json()['average power']
         carbon = power*ci[i]
-        carbon_saved.append(carbon)
+        carbon_used.append(carbon)
         date = date + timedelta(minutes=30)
-    return carbon_saved
+    carbon_used = sum(carbon_used)/-1000000
+    return carbon_used
     
     
 if __name__ == '__main__':
-    cs = main()
-    day_saved = sum(cs)/1000000
-    print(day_saved)
+    #date = '2021-09-01'
+    cu = main()
+    #print(day_saved)
     
