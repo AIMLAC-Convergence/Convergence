@@ -22,7 +22,7 @@ def windEnergy(wSpd, intLength, wT):
     return energy
 
 def solarEnergy(DNI, DHI, z, A, intLength, sP):
-    GTI = (DHI*np.cos((sP['Tilt']) * np.pi/180)  + (DNI*np.cos((z - sP['Tilt']) * np.pi/180) * (A > 90. and A < 270.) *np.cos((A - sP['Direction']) * np.pi/180)) ) * (z < 90.)  
+    GTI = DHI*np.cos((sP['Tilt']) * np.pi/180)  + (DNI*np.cos((z - sP['Tilt']) * np.pi/180) * (A > 90. and A < 270.) *np.cos((A - sP['Direction']) * np.pi/180)) * (z < 90.)  
     power = GTI * sP['Area'] * sP['Eff']
     power = ((power*(power <= sP['Cutoff'])) + (sP['Cutoff'] * (power > sP['Cutoff']))) * sP['Count']
     energy = power * intLength
