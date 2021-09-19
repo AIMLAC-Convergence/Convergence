@@ -37,6 +37,7 @@ from convergence_modules.energy_production.energy_production import main as ener
 from convergence_modules.energy_consumption.Energy_use import main as energy_cons
 from Model.scripts.make_prediction import Predictor
 from google.cloud import storage
+import convergence_modules.carbon_savings.carbon_savings as cs
 import datetime
 
 def upload_blob(source_file_name, destination_blob_name):
@@ -260,6 +261,16 @@ def run_main(config):
     df_market_price.set_index('timestamp', inplace=True)
     dump_sql(df_market_price, params['market_table'], params['username'], params['password'],params['db_address'],params['db_accesstype'])
     
+    #carbon display bits
+    cu = cs.main()
+    f = open("web/static/carbon_used.js",'w')
+    js1 = '\"carbonvalue\"'
+    js2 = '\"%d\"' % cu
+    js_string = 'document.getElementById(' + js1 + ').innerHTML = ' + js2
+    f.write(js_string)
+    f.close()
+    upload_blob("carbon_used.js","carbon_used.js")
+    
     produce_plots(params)
   
 @app.route('/hello')
@@ -281,4 +292,3 @@ def redirect_to_index():
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8080)	
-	
