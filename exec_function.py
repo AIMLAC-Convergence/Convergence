@@ -99,7 +99,10 @@ def actually_produce_plots(df, title):
 def produce_plots(params):
     df_energy = load_sql(params['production_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
     df_weather = load_sql(params['weather_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
-    df_usage = load_sql(params['consumption_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).tail(24)
+    df_usage_len = 48
+    df_usage = load_sql(params['consumption_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).tail(df_usage_len)
+    df_usage["timestamp"] = df_weather.tail(df_usage_len)["timestamp"]
+    df_usage = df_usage.set_index("timestamp")
     df_energy.drop(columns=['units'], inplace = True)
     df_energy.rename(columns={'solar_energy':'solar_energy(kWh)', 'wind_energy':'wind_energy(kWh)'}, inplace = True)
     #df_price = load_sql(params['market_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")

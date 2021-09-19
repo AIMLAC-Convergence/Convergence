@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    function insertHTML(html, dest, append = false) {
+        // if no append is requested, clear the target element
+        if (!append) dest.innerHTML = '';
+        // create a temporary container and insert provided HTML code
+        let container = document.createElement('div');
+        container.innerHTML = html;
+        // cache a reference to all the scripts in the container
+        let scripts = container.querySelectorAll('script');
+        // get all child elements and clone them in the target element
+        let nodes = container.childNodes;
+        for (let i = 0; i < nodes.length; i++) dest.appendChild(nodes[i].cloneNode(true));
+        // force the found scripts to execute...
+        for (let i = 0; i < scripts.length; i++) {
+            let script = document.createElement('script');
+            script.type = scripts[i].type || 'text/javascript';
+            if (scripts[i].hasAttribute('src')) script.src = scripts[i].src;
+            script.innerHTML = scripts[i].innerHTML;
+            document.head.appendChild(script);
+            document.head.removeChild(script);
+        }
+        // done!
+        return true;
+    }
+
+    function includeHTML() {
+        var z, i, elmnt, file, xhttp;
+        /*loop through a collection of all HTML elements:*/
+        z = document.getElementsByTagName("*");
+        for (i = 0; i < z.length; i++) {
+            elmnt = z[i];
+            /*search for elements with a certain atrribute:*/
+            file = elmnt.getAttribute("w3-include-html");
+            
+            if (file) {
+                /*make an HTTP request using the attribute value as the file name:*/
+                xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            insertHTML(this.responseText, elmnt);
+                            // elmnt.innerHTML = this.responseText;
+                        }
+                        if (this.status == 404) { elmnt.innerHTML = "Page not found."; }
+                        /*remove the attribute, and call this function once more:*/
+                        elmnt.removeAttribute("w3-include-html");
+                        includeHTML();
+                    }
+                }
+                xhttp.open("GET", file, true);
+                xhttp.send();
+                /*exit the function:*/
+                return;
+            }
+        }
+    };
+
+</script>
+
+<body>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+        <li><a data-toggle="tab" href="#menu1">Production</a></li>
+        <li><a data-toggle="tab" href="#menu2">Usage</a></li>
+        <li><a data-toggle="tab" href="#menu3">Market Price</a></li>
+        <li><a data-toggle="tab" href="#menu4">Bids</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+            <h3>HOME</h3>
+
+        </div>
+        <div id="menu1" class="tab-pane fade">
+            <div w3-include-html="Energy.html"></div>
+        </div>
+        <div id="menu2" class="tab-pane fade">
+            <div w3-include-html="EnergyUsage.html"></div>
+        </div>
+        <div id="menu3" class="tab-pane fade">
+            <div w3-include-html="MarketPrice.html"></div>
+        </div>
+        <div id="menu4" class="tab-pane fade">
+            <div w3-include-html="df_bid.html"></div>
+        </div>
+    </div>
+
+    <script>
+        includeHTML();
+    </script>
+
+</body>
+</html>
