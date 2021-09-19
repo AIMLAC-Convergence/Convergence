@@ -269,7 +269,7 @@ def run_main(config):
     js_string = 'document.getElementById(' + js1 + ').innerHTML = ' + js2
     f.write(js_string)
     f.close()
-    upload_blob("carbon_used.js","carbon_used.js")
+    upload_blob("web/static/carbon_used.js","carbon_used.js")
     
     produce_plots(params)
   
