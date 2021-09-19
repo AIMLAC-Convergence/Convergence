@@ -260,8 +260,11 @@ def run_main(config):
     
     #carbon display bits
     cu = cs.main()
-    f = open("carbon_used.js",'w')
-    f.write('document.getElementById("carbonvalue").innerHTML = "%d kgs"' % cu)
+    f = open("web/static/carbon_used.js",'w')
+    js1 = '\"carbonvalue\"'
+    js2 = '\"%d\"' % cu
+    js_string = 'document.getElementById(' + js1 + ').innerHTML = ' + js2
+    f.write(js_string)
     f.close()
     upload_blob("carbon_used.js","carbon_used.js")
     
