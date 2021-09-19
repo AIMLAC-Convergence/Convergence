@@ -37,7 +37,7 @@ from convergence_modules.energy_production.energy_production import main as ener
 from convergence_modules.energy_consumption.Energy_use import main as energy_cons
 from Model.scripts.make_prediction import Predictor
 from google.cloud import storage
-import carbon_savings as cs
+import convergence_modules.carbon_savings.carbon_savings as cs
 import datetime
 
 def upload_blob(source_file_name, destination_blob_name):
