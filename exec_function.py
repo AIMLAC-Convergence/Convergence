@@ -101,7 +101,7 @@ def produce_plots(params):
     df_weather = load_sql(params['weather_table'], params['username'], params['password'], params['db_address'],params['db_accesstype']).set_index("timestamp")
     df_usage = load_sql(params['consumption_table'], params['username'], params['password'], params['db_address'],params['db_accesstype'])
     df_usage_len = min(len(df_weather.index), len(df_usage.index))
-    df_usage_len = df_usage_len.tail(df_usage_len)
+    df_usage = df_usage.tail(df_usage_len)
     df_usage["timestamp"] = df_weather.tail(df_usage_len).index   #
     df_usage = df_usage.set_index("timestamp")
     df_energy.drop(columns=['units'], inplace = True)
