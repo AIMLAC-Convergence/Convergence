@@ -8,6 +8,7 @@ params:
    password : "24sgt5ppm" 
    db_address : "aimlac-containers:europe-north1:convergenced"
    db_accesstype : "UNIX"
+   # comment out above and uncomment these for local use
    #db_address : "localhost"
    #db_accesstype : "IP"
    location: !!python/tuple [52.1051, -3.6680]
